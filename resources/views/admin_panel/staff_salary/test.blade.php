@@ -74,7 +74,7 @@
                                         <thead>
                                             <tr>
                                                 <th>S.N.</th>
-                                                <th>Employee</th>
+                                                <th>Employee Name</th>
                                                 <th>Salary</th>
                                                 <th>Paid This Month	</th>
                                                 <th>Due This Month	</th>
