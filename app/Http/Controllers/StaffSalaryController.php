@@ -125,7 +125,7 @@ class StaffSalaryController extends Controller
     
             $salary->advance_amount += $request->amount;
             $salary->remarks = "Advance given";
-            $salary->status = "advance";
+            $salary->status = "paid";
         }
     
         $salary->due_amount = $staff->salary - $salary->paid_amount;
