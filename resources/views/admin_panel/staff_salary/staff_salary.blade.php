@@ -96,119 +96,135 @@ table{
                 .status-advance { color: blue; }
                 .status-clear { color: green; }
             </style>
+<script>
+    const employeeData = {!! $employeeDataJson !!};
+    const salaryTable = document.getElementById('salaryTable');
 
-            <script>
-               const employeeData = {!! $employeeDataJson !!};
+    function paySalary(empId) {
+        const data = employeeData[empId];
+        const today = new Date();
+        const currentMonth = today.toISOString().slice(0, 7);
+        const currentData = data.history[currentMonth] || { paid: 0 };
+        const due = data.salary - currentData.paid;
 
+        if (due <= 0) {
+            alert("Salary already fully paid this month.");
+            return;
+        }
 
-                // const employeeSelect = document.getElementById('employeeSelect');
-                // const salaryInfo = document.getElementById('salaryInfo');
-                // const salaryTable = document.getElementById('salaryTable');
+        let amount = prompt(`Enter amount to pay (Max: ${due}):`);
+        amount = parseFloat(amount);
+        if (isNaN(amount) || amount <= 0 || amount > due) {
+            alert("Invalid amount!");
+            return;
+        }
 
-                // employeeSelect.addEventListener('change', function () {
-                //     const selectedId = employeeSelect.value;
-                //     const selectedName = employeeSelect.options[employeeSelect.selectedIndex].text;
-                //     if (!selectedId) return (salaryInfo.innerHTML = "");
+        const paymentDate = today.toISOString().slice(0, 10);
 
-                //     const data = employeeData[selectedName];
-                //     const today = new Date();
-                //     const currentMonth = today.toISOString().slice(0, 7);
-                //     const currentData = data.history[currentMonth] || { paid: 0 };
-                //     const due = data.salary - currentData.paid;
+        // AJAX POST request
+        fetch("{{ route('staff_salaries.store') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                staff_id: empId,
+                amount: amount,
+                type: 'pay',
+                payment_date: paymentDate
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.message) {
+                alert(`Salary of Rs.${amount} paid to ${data.name}`);
+                location.reload(); // Or call updateTable() again if dynamic update is set up
+            }
+        })
+        .catch(err => {
+            alert("Error: " + err.message);
+        });
+    }
 
-                //     salaryInfo.innerHTML = `
-                //         <p><strong>Salary:</strong> ${data.salary}</p>
-                //         <p><strong>Paid (${currentMonth}):</strong> ${currentData.paid || 0}</p>
-                //         <p><strong>Due (${currentMonth}):</strong> <span class="status-due">${due}</span></p>
-                //         <p><strong>Advance:</strong> <span class="status-advance">${data.advance}</span></p>
-                //         <button class="btn btn-pay" onclick="paySalary('${selectedName}')">Pay Salary</button>
-                //         <button class="btn btn-advance" onclick="giveAdvance('${selectedName}')">Give Advance</button>
-                //     `;
-                // });
+    function giveAdvance(empId) {
+        const data = employeeData[empId];
+        const today = new Date();
+        const currentMonth = today.toISOString().slice(0, 7);
+        const currentData = data.history[currentMonth] || { paid: 0 };
+        const due = data.salary - currentData.paid;
 
-                function paySalary(emp) {
-                    const data = employeeData[emp];
-                    const today = new Date();
-                    const currentMonth = today.toISOString().slice(0, 7);
-                    const currentData = data.history[currentMonth] || { paid: 0 };
-                    const due = data.salary - currentData.paid;
+        if (due > 0) {
+            alert("Clear due salary before giving advance.");
+            return;
+        }
 
-                    if (due <= 0) {
-                        alert("Salary already fully paid this month.");
-                        return;
-                    }
+        let amount = prompt("Enter advance amount:");
+        amount = parseFloat(amount);
+        if (isNaN(amount) || amount <= 0) {
+            alert("Invalid advance amount!");
+            return;
+        }
 
-                    let amount = prompt(`Enter amount to pay (Max: ${due}):`);
-                    amount = parseFloat(amount);
-                    if (isNaN(amount) || amount <= 0 || amount > due) {
-                        alert("Invalid amount!");
-                        return;
-                    }
+        const paymentDate = today.toISOString().slice(0, 10);
 
-                    if (!data.history[currentMonth]) {
-                        data.history[currentMonth] = { paid: 0, date: today.toISOString().slice(0, 10) };
-                    }
+        // AJAX POST request
+        fetch("{{ route('staff_salaries.store') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                staff_id: empId,
+                amount: amount,
+                type: 'advance',
+                payment_date: paymentDate
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.message) {
+                alert(`Advance of Rs.${amount} given to ${data.name}`);
+                location.reload(); // Or call updateTable() again if dynamic update is set up
+            }
+        })
+        .catch(err => {
+            alert("Error: " + err.message);
+        });
+    }
 
-                    data.history[currentMonth].paid += amount;
-                    updateTable();
-                    employeeSelect.dispatchEvent(new Event('change'));
-                }
+    function updateTable() {
+        salaryTable.innerHTML = "";
+        let count = 1;
 
-                function giveAdvance(emp) {
-                    const data = employeeData[emp];
-                    const today = new Date();
-                    const currentMonth = today.toISOString().slice(0, 7);
-                    const currentData = data.history[currentMonth] || { paid: 0 };
-                    const due = data.salary - currentData.paid;
+        for (const [emp, data] of Object.entries(employeeData)) {
+            const today = new Date();
+            const currentMonth = today.toISOString().slice(0, 7);
+            const paid = data.history[currentMonth]?.paid || 0;
+            const due = data.salary - paid;
+            const lastMonthPaid = Object.keys(data.history).sort().pop() || 'N/A';
 
-                    if (due > 0) {
-                        alert("Clear due salary before giving advance.");
-                        return;
-                    }
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${count++}</td>
+                <td>${data.name}</td>
+                <td>${data.salary}</td>
+                <td>${paid}</td>
+                <td><span class="badge bg-danger">${due > 0 ? due : 0}</span></td>
+                <td><span class="badge bg-success">${data.advance}</span></td>
+                <td>${lastMonthPaid}</td>
+                <td>
+                    <button class="btn btn-success btn-sm" onclick="paySalary('${emp}')">Pay</button>
+                    <button class="btn btn-warning btn-sm" onclick="giveAdvance('${emp}')">Advance</button>
+                </td>
+            `;
+            salaryTable.appendChild(row);
+        }
+    }
 
-                    let amount = prompt("Enter advance amount:");
-                    amount = parseFloat(amount);
-                    if (isNaN(amount) || amount <= 0) {
-                        alert("Invalid advance!");
-                        return;
-                    }
-
-                    data.advance += amount;
-                    updateTable();
-                    employeeSelect.dispatchEvent(new Event('change'));
-                }
-
-                function updateTable() {
-                    salaryTable.innerHTML = "";
-                    let count = 1;
-
-                    for (const [emp, data] of Object.entries(employeeData)) {
-                        const today = new Date();
-                        const currentMonth = today.toISOString().slice(0, 7);
-                        const paid = data.history[currentMonth]?.paid || 0;
-                        const due = data.salary - paid;
-                        const lastMonthPaid = Object.keys(data.history).sort().pop() || 'N/A';
-
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td  style="text-align:center">${count++}</td>
-                            <td>${emp}</td>
-                            <td>${data.salary}</td>
-                            <td>${paid}</td>
-                            <td class="status-due   "><span class="badge--danger sm">${due > 0 ? due : 0}</span</td>
-                            <td class="status-advance"><span class="badge--success sm">${data.advance}</td>
-                            <td>${lastMonthPaid}</td>
-                            <td style="text-align:center">
-                                <button class="btn btn-pay" onclick="paySalary('${emp}')">Pay</button>
-                                <button class="btn btn-advance" onclick="giveAdvance('${emp}')">Advance</button>
-                            </td>
-                        `;
-                        salaryTable.appendChild(row);
-                    }
-                }
-
-                updateTable();
-            </script>
+    updateTable();
+</script>
 
         </div>
     </div>
