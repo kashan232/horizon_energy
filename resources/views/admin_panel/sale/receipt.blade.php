@@ -193,7 +193,7 @@
         window.onload = function () {
             window.print();
             setTimeout(function () {
-                window.location.href = "{{ route('all-sales') }}";
+                window.location.href = "{{ route('Sale') }}";
             }, 1000);
         };
     </script>

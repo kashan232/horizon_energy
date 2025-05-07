@@ -70,7 +70,7 @@ table{
                         <thead>
                             <tr>
                                 <th  style="text-align:center">#</th>
-                                <th>Employee test</th>
+                                <th>Employee</th>
                                 <th>Salary</th>
                                 <th>Paid This Month</th>
                                 <th>Due This Month</th>

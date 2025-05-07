@@ -192,10 +192,10 @@ class ProductController extends Controller
 
     public function getProductDetails($productName)
     {
-        $product = Product::where('product_name', $productName)->first();
+        $product = Product::where('name', $productName)->first();
         if ($product) {
             return response()->json([
-                'retail_price' => $product->retail_price,
+                'price' => $product->retail_price,
                 'stock' => $product->stock,
             ]);
         }
@@ -203,15 +203,27 @@ class ProductController extends Controller
     }
 
     public function searchProducts(Request $request)
-    {
-        $query = $request->get('q');
+{
+    $query = $request->get('q');
 
-        // Perform a search based on the product name
-        $products = Product::where('product_name', 'like', '%' . $query . '%')
-            ->get(['id', 'category', 'product_name', 'retail_price']);
+    // Eager load the category relation
+    $products = Product::with('category')
+        ->where('name', 'like', '%' . $query . '%')
+        ->get(['id', 'category_id', 'name', 'price']);
 
-        return response()->json($products);
-    }
+    // Format the result to include category name
+    $products = $products->map(function ($product) {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'category' => $product->category ? $product->category->category : null, // 'category' is the column name in categories table
+        ];
+    });
+
+    return response()->json($products);
+}
+
 
     public function product_alerts()
     {

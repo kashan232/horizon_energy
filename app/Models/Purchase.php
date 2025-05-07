@@ -26,7 +26,7 @@ class Purchase extends Model
 
         // Increment the last number and format it with leading zeros
         $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-
+        // protected $table = 'purchases';
         // Return the new invoice number
         return $prefix . $newNumber;
     }

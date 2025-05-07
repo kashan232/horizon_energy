@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// code deploy 
+// code deploy
 // pos start
 // Old Pos setup
 // Software deployed
@@ -54,7 +54,7 @@ Route::get('/admin-page', [HomeController::class, 'adminpage'])->middleware(['au
 Route::get('/Admin-Change-Password', [HomeController::class, 'Admin_Change_Password'])->name('Admin-Change-Password');
 Route::post('/updte-change-Password', [HomeController::class, 'updte_change_Password'])->name('updte-change-Password');
 
-// staff dashboard work 
+// staff dashboard work
 Route::get('/get-products-by-category', [HomeController::class, 'getProductsByCategory'])->name('get.products.by.category');
 Route::get('/get-product-by-barcode', [HomeController::class, 'getProductByBarcode'])->name('get.product.by.barcode');
 
@@ -64,7 +64,7 @@ Route::get('/category', [CategoryController::class, 'category'])->middleware(['a
 Route::post('/store-category', [CategoryController::class, 'store_category'])->name('store-category');
 Route::post('/update-category', [CategoryController::class, 'update_category'])->name('update-category');
 
-//Sub category 
+//Sub category
 Route::get('/sub-category', [Sub_cat_Cotnroller::class, 'sub_category'])->middleware(['auth', 'admin'])->name('subcategory');
 Route::post('/sub-store-category', [Sub_cat_Cotnroller::class, 'store_sub_category'])->name('store-subcategory');
 Route::post('/sub-update-category', [Sub_cat_Cotnroller::class, 'update_sub_category'])->name('update-subcategory');
@@ -106,7 +106,7 @@ Route::delete('/deals/{id}', [DealController::class, 'destroy'])->name('deal.des
     Route::post('/client-info-store', [DealController::class, 'storeClientInfo'])->name('client.info.store');
     Route::post('/cart/add/{id}', [DealController::class, 'addToCart'])->name('cart.add');
     Route::post('/cart/place-order', [DealController::class, 'placeOrder'])->name('cart.place-order');
-    Route::get('/cart/remove/{id}', [DealController::class, 'removeFromCart'])->name('cart.remove');
+    // Route::get('/cart/remove/{id}', [DealController::class, 'removeFromCart'])->name('cart.remove');
 Route::delete('/cart/remove/{id}', [DealController::class, 'removeFromCart'])->name('cart.remove');
 
 Route::get('/all-order', [OrderController::class, 'all_order'])->middleware(['auth', 'admin'])->name('all-order');
@@ -169,7 +169,7 @@ Route::get('/staff', [StaffController::class, 'staff'])->middleware(['auth', 'ad
 Route::post('/store-staff', [StaffController::class, 'store_staff'])->name('store-staff');
 Route::post('/update-staff', [StaffController::class, 'update_staff'])->name('update-staff');
 
-//Staff Salary 
+//Staff Salary
 
 Route::get('/staff-salaries', [StaffSalaryController::class, 'index'])->name('staff_salaries.index');
 Route::post('/staff-salaries/get-details', [StaffSalaryController::class, 'getSalaryDetails'])->name('staff_salaries.details');
@@ -181,7 +181,7 @@ Route::post('/store-expense', [ExpenseController::class, 'store'])->name('store-
 Route::post('/update-expense', [ExpenseController::class, 'update'])->name('update-expense');
 
 
-//Purchase 
+//Purchase
 Route::get('/Purchase', [PurchaseController::class, 'Purchase'])->middleware(['auth', 'admin'])->name('Purchase');
 Route::get('/add-purchase', [PurchaseController::class, 'add_purchase'])->middleware(['auth', 'admin'])->name('add-purchase');
 Route::post('/store-Purchase', [PurchaseController::class, 'store_Purchase'])->name('store-Purchase');
@@ -189,7 +189,7 @@ Route::post('/update-Purchase', [PurchaseController::class, 'update_Purchase'])-
 Route::post('/purchases-payment', [PurchaseController::class, 'purchases_payment'])->name('purchases-payment');
 Route::get('/get-items-by-category/{categoryId}', [PurchaseController::class, 'getItemsByCategory'])->name('get-items-by-category');
 
-Route::get('/purchase-view/{id}', [PurchaseController::class, 'view'])->name('purchase-view');
+Route::get('/purchase-view/{id}', [SaleController::class, 'view'])->name('purchase-view');
 Route::get('/purchase-return/{id}', [PurchaseController::class, 'purchase_return'])->name('purchase-return');
 Route::post('/store-purchase-return', [PurchaseController::class, 'store_purchase_return'])->name('store-purchase-return');
 Route::get('/all-purchase-return', [PurchaseController::class, 'all_purchase_return'])->name('all-purchase-return');
@@ -202,12 +202,14 @@ Route::post('/store-purchase-return-damage-item', [PurchaseController::class, 's
 Route::get('/all-purchase-return-damage-item', [PurchaseController::class, 'all_purchase_return_damage_item'])->name('all-purchase-return-damage-item');
 
 
-//Sale 
+//Sale
 Route::get('/Sale', [SaleController::class, 'Sale'])->name('Sale');
 Route::get('/add-Sale', [SaleController::class, 'add_Sale'])->name('add-Sale');
 Route::post('/store-Sale', [SaleController::class, 'store_Sale'])->name('store-Sale');
 Route::get('/all-sales', [SaleController::class, 'all_sales'])->name('all-sales');
 Route::get('/get-customer-amount/{id}', [SaleController::class, 'get_customer_amount'])->name('get-customer-amount');
+Route::get('/sale/edit/{id}', [SaleController::class, 'edit'])->name('sale.edit');
+Route::post('/sale/update/{id}', [SaleController::class, 'update'])->name('sale.update');
 
 
 // Route for downloading invoice
@@ -228,7 +230,7 @@ Route::post('/customer/recovery', [CustomerController::class, 'processRecovery']
 Route::get('/customer-recovires', [CustomerController::class, 'customer_recovires'])->middleware(['auth', 'admin'])->name('customer-recovires');
 Route::post('/customer/credit', [CustomerController::class, 'addCredit'])->name('customer.credit');
 
-// socail media customers 
+// socail media customers
 
 Route::get('/socialcustomer', [CustomerController::class, 'social_customer'])->name('social_customer');
 Route::post('/social-store-customer', [CustomerController::class, 'social_store_customer'])->name('social_store-customer');
@@ -239,7 +241,7 @@ Route::post('/social-confirm-customer/{id}', [CustomerController::class, 'confir
 //Vendors
 
 
-Route::get('/vendor', [VendorController::class, 'vendor'])->name('vendor');
+Route::get('/vendor', [VendorController::class, 'vendor'])->name('vendor1');
 Route::post('/store-vendor', [VendorController::class, 'store_vendor'])->name('store-vendor');
 Route::post('/update-vendor', [VendorController::class, 'update_vendor'])->name('update-vendor');
 // Vendor screen dekhne ka route

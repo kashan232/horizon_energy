@@ -29,7 +29,7 @@
                                         <div class="col-xl-4 col-sm-4">
                                             <div class="form-group" id="supplier-wrapper">
                                                 <label class="form-label">Supplier</label>
-                                                <select name="supplier" class="select2-basic form-control" required>
+                                                <select name="supplier" class="form-control" required>
                                                     <option selected disabled>Select One</option>
                                                     @foreach($Suppliers as $Supplier)
                                                     <option value="{{ $Supplier->id }}">{{ $Supplier->name }}</option>
@@ -76,7 +76,7 @@
                                                 <tbody id="purchaseItems">
                                                     <tr>
                                                         <td>
-                                                            <select name="item_category[]" class=" item-category" required>
+                                                            <select name="item_category[]" class="item-category" required>
                                                                 <option value="" disabled selected>Select Category</option>
                                                                 @foreach($Category as $Categories)
                                                                 <option value="{{ $Categories->category }}">{{ $Categories->category }}</option>
@@ -220,50 +220,49 @@
         document.addEventListener('DOMContentLoaded', function() {
             const purchaseItems = document.getElementById('purchaseItems');
 
-            // Event listener for category selection
-            purchaseItems.addEventListener('change', function(e) {
-                if (e.target.classList.contains('item-category')) {
-                    const categoryId = e.target.value;
-                    const row = e.target.closest('tr');
-                    const itemSelect = row.querySelector('.item-name');
+          // Define globally from Blade:
+const getItemsByCategoryUrl = "{{ route('get-items-by-category', ['categoryId' => 'CATEGORY_ID']) }}";
+const getUnitByProductUrl = "{{ route('get-unit-by-product', ['productId' => 'PRODUCT_ID']) }}";
 
-                    if (categoryId) {
-                        fetch(`{{ route('get-items-by-category', ':categoryId') }}`.replace(':categoryId', categoryId))
-                            .then(response => response.json())
-                            .then(items => {
-                                itemSelect.innerHTML = '<option value="" disabled selected>Select Item</option>';
-                                items.forEach(item => {
-                                    const option = document.createElement('option');
-                                    option.value = item.product_name;
-                                    option.textContent = item.product_name;
-                                    itemSelect.appendChild(option);
-                                });
-                            })
-                            .catch(error => console.error('Error fetching items:', error));
-                    }
-                }
+// Event listener for category and item selection
+purchaseItems.addEventListener('change', function(e) {
+    const row = e.target.closest('tr');
 
-                // Event listener for product selection to populate Unit
-                if (e.target.classList.contains('item-name')) {
-                    const productId = e.target.value;
-                    const row = e.target.closest('tr');
-                    const unitInput = row.querySelector('.unit');
+    if (e.target.classList.contains('item-category')) {
+        const categoryId = e.target.value;
+        const itemSelect = row.querySelector('.item-name');
 
-                    if (productId) {
-                        fetch(`{{ route('get-unit-by-product', ':productId') }}`.replace(':productId', productId))
-                            .then(response => response.json())
-                            .then(product => {
-                                if (product.unit) {
-                                    unitInput.value = product.unit;
-                                } else {
-                                    unitInput.value = ''; // Handle cases where the unit is not found
-                                }
-                            })
-                            .catch(error => console.error('Error fetching unit:', error));
+        if (categoryId) {
+            fetch(getItemsByCategoryUrl.replace('CATEGORY_ID', categoryId))
+                .then(response => response.json())
+                .then(items => {
+                    itemSelect.innerHTML = '<option value="" disabled selected>Select Item</option>';
+                    items.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.name;
+                        option.textContent = item.name;
+                        itemSelect.appendChild(option);
+                    });
+                    $(itemSelect).select2(); // Reinitialize if needed
+                })
+                .catch(error => console.error('Error fetching items:', error));
+        }
+    }
 
-                    }
-                }
-            });
+    if (e.target.classList.contains('item-name')) {
+        const productId = e.target.value;
+        const unitInput = row.querySelector('.unit');
+
+        if (productId) {
+            fetch(getUnitByProductUrl.replace('PRODUCT_ID', productId))
+                .then(response => response.json())
+                .then(product => {
+                    unitInput.value = product.unit || '';
+                })
+                .catch(error => console.error('Error fetching unit:', error));
+        }
+    }
+});
 
             // Adding a new row
             const addRowButton = document.getElementById('addRow');

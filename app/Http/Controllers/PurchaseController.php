@@ -41,7 +41,7 @@ class PurchaseController extends Controller
             // dd($Suppliers->toArray());
             $Warehouses = Warehouse::get();
             $Category = Category::get();
-            return view('admin_panel.purchase.add_purchase', [
+            return view('admin_panel.purchase.test', [
                 'Suppliers' => $Suppliers,
                 'Warehouses' => $Warehouses,
                 'Category' => $Category,
@@ -269,7 +269,7 @@ class PurchaseController extends Controller
                 // Loop through item names and fetch stock quantity from the Product table
                 foreach ($itemNames as $itemName) {
                     // Fetch product based on the product_name
-                    $product = Product::where('product_name', $itemName)->first();
+                    $product = Product::where('name', $itemName)->first();
 
                     if ($product) {
                         // Store stock quantity if the product is found
@@ -316,7 +316,7 @@ class PurchaseController extends Controller
         // Update stock quantities in the Product table
         foreach ($itemNames as $index => $itemName) {
             $returnQty = $returnQuantities[$index] ?? 0;
-            $product = Product::where('product_name', $itemName)->first();
+            $product = Product::where('name', $itemName)->first();
 
             if ($product) {
                 // Subtract the return quantity from the current stock
@@ -432,7 +432,7 @@ class PurchaseController extends Controller
 
     public function getUnitByProduct($productId)
     {
-        $product = Product::where('product_name', $productId)->first();
+        $product = Product::where('name', $productId)->first();
         return response()->json([
             'unit' => $product->unit,
         ]);
@@ -465,7 +465,7 @@ class PurchaseController extends Controller
                 // Loop through item names and fetch stock quantity from the Product table
                 foreach ($itemNames as $itemName) {
                     // Fetch product based on the product_name
-                    $product = Product::where('product_name', $itemName)->first();
+                    $product = Product::where('name', $itemName)->first();
 
                     if ($product) {
                         // Store stock quantity if the product is found
@@ -513,7 +513,7 @@ class PurchaseController extends Controller
         // Update stock quantities in the Product table
         foreach ($itemNames as $index => $itemName) {
             $returnQty = $returnQuantities[$index] ?? 0;
-            $product = Product::where('product_name', $itemName)->first();
+            $product = Product::where('name', $itemName)->first();
 
             if ($product) {
                 // Subtract the return quantity from the current stock
