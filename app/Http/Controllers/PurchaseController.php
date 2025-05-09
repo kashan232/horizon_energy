@@ -41,7 +41,7 @@ class PurchaseController extends Controller
             // dd($Suppliers->toArray());
             $Warehouses = Warehouse::get();
             $Category = Category::get();
-            return view('admin_panel.purchase.test', [
+            return view('admin_panel.purchase.add_purchase', [
                 'Suppliers' => $Suppliers,
                 'Warehouses' => $Warehouses,
                 'Category' => $Category,
@@ -50,13 +50,11 @@ class PurchaseController extends Controller
             return redirect()->back();
         }
     }
-
     public function getItemsByCategory($categoryId)
     {
-        $items = Product::where('category', $categoryId)->get(); // Adjust according to your database structure
-        return response()->json($items);
+        $products = Product::where('category_id', $categoryId)->get();
+        return response()->json($products);
     }
-
 
     public function view($id)
     {
@@ -77,7 +75,7 @@ class PurchaseController extends Controller
 
     public function store_Purchase(Request $request)
     {
-        // dd($request);
+        // dd($request->all());
         // Validate the request
         $validatedData = $request->validate([
             'supplier' => 'required|string',
@@ -88,6 +86,7 @@ class PurchaseController extends Controller
             'quantity' => 'required|array',
             'price' => 'required|array',  // This is an array of prices
             'total' => 'required|array',
+            'unit' => 'required|array',
             'note' => 'nullable|string',
             'total_price' => 'required|numeric',
             'discount' => 'nullable|numeric',  // Ensure it's numeric
@@ -113,6 +112,7 @@ class PurchaseController extends Controller
             'price' => json_encode($request->price),  // Array of prices
             'total' => json_encode($request->total),
             'note' => $request->note,
+            'unit' => json_encode($request->unit),
             'total_price' => $totalPrice,
             'discount' => $discount,
             'Payable_amount' => $totalPrice - $discount, // Correct subtraction with numeric values
@@ -120,7 +120,6 @@ class PurchaseController extends Controller
             'due_amount' => $request->due_amount,
 
         ];
-
         // Save purchase data
         $purchase = Purchase::create($purchaseData);
 
@@ -131,8 +130,8 @@ class PurchaseController extends Controller
             $purchase_price = $request->price[$key];  // Single price for the item
 
             // Find the product and update stock and wholesale price
-            $product = Product::where('product_name', $item_name)
-                ->where('category', $item_category)
+            $product = Product::where('name', $item_name)
+                ->where('category_id', $item_category)
                 ->first();
 
             if ($product) {
@@ -145,8 +144,94 @@ class PurchaseController extends Controller
         return redirect()->back()->with('success', 'Purchase saved successfully and stock updated.');
     }
 
+    public function update(Request $request)
+    {
+        // dd($request->all());
+        // Validate input
+        $validatedData = $request->validate([
+            'supplier' => 'required|string',
+            'purchase_date' => 'required|date',
+            'warehouse_id' => 'required|string',
+            'item_category' => 'required|array',
+            'item_name' => 'required|array',
+            'quantity' => 'required|array',
+            'price' => 'required|array',
+            'total' => 'required|array',
+            'unit' => 'required|array',
+            'note' => 'nullable|string',
+            'total_price' => 'required|numeric',
+            'discount' => 'nullable|numeric',
+
+        ]);
+
+        // Find existing purchase
+        $purchase = Purchase::findOrFail($request->id);
+
+        // Revert previous stock
+        $old_item_ids = json_decode($purchase->item_id, true);
+        $old_quantities = json_decode($purchase->quantity, true);
+
+        if (is_array($old_item_ids) && is_array($old_quantities)) {
+            foreach ($old_item_ids as $key => $old_item_id) {
+                $old_quantity = $old_quantities[$key];
+                $product = Product::find($old_item_id);
+                if ($product) {
+                    $product->stock -= $old_quantity;
+                    $product->save();
+                }
+            }
+        }
 
 
+        // Update purchase record
+        $purchase->update([
+            'supplier' => $request->supplier,
+            'purchase_date' => $request->purchase_date,
+            'warehouse_id' => $request->warehouse_id,
+            'item_category' => json_encode($request->item_category),
+            'item_name' => json_encode($request->item_name),
+            'quantity' => json_encode($request->quantity),
+            'price' => json_encode($request->price),
+            'total' => json_encode($request->total),
+            'unit' => json_encode($request->unit),
+            'note' => $request->note,
+            'total_price' => $request->total_price,
+            'discount' => $request->discount ?? 0,
+            'payable_amount' => $request->total_price - ($request->discount ?? 0),
+            'paid_amount' => $request->cash_received,
+            'due_amount' => $request->due_amount,
+        ]);
+
+        // Update new stock
+        foreach ($request->item_name as $key => $itemId) {
+            $product = Product::find($itemId);
+            if ($product) {
+                $product->stock += $request->quantity[$key];
+                $product->save();
+            }
+        }
+
+        return redirect()->route('Purchase')->with('success', 'Purchase updated successfully.');
+    }
+
+    public function edit($id)
+{
+
+    $purchase = Purchase::findOrFail($id);
+    // dd($purchase->item_name);
+
+    $Suppliers = Supplier::all();
+    $Warehouses = Warehouse::all();
+    $Category = Category::all(); // or whatever your model is
+    $purchase->item_name = json_decode($purchase->item_name, true);
+    $purchase->item_category = json_decode($purchase->item_category, true);
+    $purchase->unit = json_decode($purchase->unit, true);
+    $purchase->quantity = json_decode($purchase->quantity, true);
+    $purchase->price = json_decode($purchase->price, true);
+    $purchase->total = json_decode($purchase->total, true);
+
+    return view('admin_panel.purchase.edit', compact('purchase', 'Suppliers', 'Warehouses', 'Category'));
+}
     // public function store_Purchase(Request $request)
     // {
     //     // Validate the request
@@ -431,14 +516,14 @@ class PurchaseController extends Controller
     }
 
     public function getUnitByProduct($productId)
-    {
-        $product = Product::where('name', $productId)->first();
-        return response()->json([
-            'unit' => $product->unit,
-        ]);
-    }
+{
+    $product = Product::with('unit')->find($productId);
 
-
+    return response()->json([
+        'unit' => $product->unit->unit ?? null,
+        'price' => $product->price ?? null, // Make sure your Product table has a 'price' field
+    ]);
+}
     public function purchase_return_damage_item($id)
     {
         if (Auth::id()) {

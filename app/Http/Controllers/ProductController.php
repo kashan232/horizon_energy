@@ -191,38 +191,40 @@ class ProductController extends Controller
     }
 
     public function getProductDetails($productName)
-    {
-        $product = Product::where('name', $productName)->first();
-        if ($product) {
-            return response()->json([
-                'price' => $product->retail_price,
-                'stock' => $product->stock,
-            ]);
-        }
-        return response()->json(['message' => 'Product not found'], 404);
+{
+    $product = Product::with('unit')->where('name', $productName)->first();
+    if ($product) {
+        return response()->json([
+            'price' => $product->price,
+            'stock' => $product->stock,
+            'unit' => $product->unit ? $product->unit->unit : null,
+        ]);
     }
+    return response()->json(['message' => 'Product not found'], 404);
+}
 
-    public function searchProducts(Request $request)
+
+public function searchProducts(Request $request)
 {
     $query = $request->get('q');
 
-    // Eager load the category relation
-    $products = Product::with('category')
+    $products = Product::with(['category', 'unit'])
         ->where('name', 'like', '%' . $query . '%')
-        ->get(['id', 'category_id', 'name', 'price']);
+        ->get(['id', 'category_id', 'unit_id', 'name', 'price']);
 
-    // Format the result to include category name
     $products = $products->map(function ($product) {
         return [
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
-            'category' => $product->category ? $product->category->category : null, // 'category' is the column name in categories table
+            'category' => $product->category ? $product->category->category : null,
+            'unit' => $product->unit ? $product->unit->unit : null,
         ];
     });
 
     return response()->json($products);
 }
+
 
 
     public function product_alerts()

@@ -20,7 +20,7 @@ class HomeController extends Controller
     public function welcome(Request $request)
 {
     $products = Product::all();
-    
+
     $all_categories = Category::get()
         ->map(function ($category) {
             $category->products_count = $category->products()->count();
@@ -55,7 +55,8 @@ class HomeController extends Controller
                 $totalPurchaseReturnsPrice = \App\Models\PurchaseReturn::sum('total_price');
                 // Fetch all products for the logged-in admin
                 // $all_product = Product::where('admin_or_user_id', '=', $userId)->get();
-                $all_product = Product::get();
+                $all_product = Product::with(['category', 'unit'])->get();
+
 
                 // Calculate total stock value for all products
                 $totalStockValue = $all_product->sum(function ($product) {
@@ -142,7 +143,7 @@ class HomeController extends Controller
         }
     }
 
-    // Staff work 
+    // Staff work
 
     public function getProductsByCategory(Request $request)
     {

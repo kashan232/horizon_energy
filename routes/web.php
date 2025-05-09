@@ -81,7 +81,7 @@ Route::get('/unit', [UnitController::class, 'unit'])->middleware(['auth', 'admin
 Route::post('/store-unit', [UnitController::class, 'store_unit'])->name('store-unit');
 Route::post('/update-unit', [UnitController::class, 'update_unit'])->name('update-unit');
 
-//product
+//start product
 Route::get('/all-product', [ProductController::class, 'all_product'])->middleware(['auth', 'admin'])->name('all-product');
 Route::get('/add-product', [ProductController::class, 'add_product'])->middleware(['auth', 'admin'])->name('add-product');
 Route::post('/store-product', [ProductController::class, 'store_product'])->name('store-product');
@@ -90,8 +90,10 @@ Route::post('/update-product/{id}', [ProductController::class, 'update_product']
 Route::get('/product-alerts', [ProductController::class, 'product_alerts'])->name('product-alerts');
 Route::get('/get-subcategories/{category}', [ProductController::class, 'getSubcategories'])->name('get.subcategories');
 Route::get('/get-items/{category}/{subcategory}', [ProductController::class, 'getItems'])->name('get.items');
+Route::get('/search-products', [ProductController::class, 'searchProducts'])->name('search-products');
+//end product
 
-// Deals
+//start Deals
 Route::get('/deals', [DealController::class, 'index'])->middleware(['auth', 'admin'])->name('deal.index');
 Route::post('/deals', [DealController::class, 'store'])->name('deals.store');
 Route::get('/deals/create', [DealController::class, 'create'])->name('deal.create');
@@ -99,7 +101,8 @@ Route::get('/deal/{id}', [DealController::class, 'show'])->name('deals.show');
 Route::post('/deals/{id}/toggle', [DealController::class, 'toggleStatus'])->name('deal.toggle');
 Route::delete('/deals/{id}', [DealController::class, 'destroy'])->name('deal.destroy');
     // // Public Side
-    Route::get('/all-deals', [DealController::class, 'webpage'])->name('all-deal.public');
+Route::get('/all-deals', [DealController::class, 'webpage'])->name('all-deal.public');
+//end Deals
 
     // Cart Side
     Route::get('/cart', [DealController::class, 'showCart'])->name('cart.show');
@@ -185,7 +188,7 @@ Route::post('/update-expense', [ExpenseController::class, 'update'])->name('upda
 Route::get('/Purchase', [PurchaseController::class, 'Purchase'])->middleware(['auth', 'admin'])->name('Purchase');
 Route::get('/add-purchase', [PurchaseController::class, 'add_purchase'])->middleware(['auth', 'admin'])->name('add-purchase');
 Route::post('/store-Purchase', [PurchaseController::class, 'store_Purchase'])->name('store-Purchase');
-Route::post('/update-Purchase', [PurchaseController::class, 'update_Purchase'])->name('update-Purchase');
+// Route::post('/update-Purchase', [PurchaseController::class, 'update_Purchase'])->name('update.purchase');
 Route::post('/purchases-payment', [PurchaseController::class, 'purchases_payment'])->name('purchases-payment');
 Route::get('/get-items-by-category/{categoryId}', [PurchaseController::class, 'getItemsByCategory'])->name('get-items-by-category');
 
@@ -200,9 +203,13 @@ Route::get('/get-unit-by-product/{productId}', [PurchaseController::class, 'getU
 Route::get('/purchase-return-damage-item/{id}', [PurchaseController::class, 'purchase_return_damage_item'])->name('purchase-return-damage-item');
 Route::post('/store-purchase-return-damage-item', [PurchaseController::class, 'store_purchase_return_damage_item'])->name('store-purchase-return-damage-item');
 Route::get('/all-purchase-return-damage-item', [PurchaseController::class, 'all_purchase_return_damage_item'])->name('all-purchase-return-damage-item');
+Route::get('purchase/edit/{id}', [PurchaseController::class, 'edit'])->name('edit.purchase');
+Route::post('purchase/update', [PurchaseController::class, 'update'])->name('purchase.update');
 
 
-//Sale
+//start Sale route
+// Route::get('/sales-return/{id}', [SaleController::class, 'salesreturn'])->name('sales-return');
+
 Route::get('/Sale', [SaleController::class, 'Sale'])->name('Sale');
 Route::get('/add-Sale', [SaleController::class, 'add_Sale'])->name('add-Sale');
 Route::post('/store-Sale', [SaleController::class, 'store_Sale'])->name('store-Sale');
@@ -210,16 +217,18 @@ Route::get('/all-sales', [SaleController::class, 'all_sales'])->name('all-sales'
 Route::get('/get-customer-amount/{id}', [SaleController::class, 'get_customer_amount'])->name('get-customer-amount');
 Route::get('/sale/edit/{id}', [SaleController::class, 'edit'])->name('sale.edit');
 Route::post('/sale/update/{id}', [SaleController::class, 'update'])->name('sale.update');
-
-
-// Route for downloading invoice
+Route::get('/Sale/return/view', [SaleController::class, 'Salereturnview'])->name('Sale.returnview');
+Route::post('/store-sales-return', [SaleController::class, 'storeSalesReturn'])->name('store-sales-return');
 Route::get('/invoice/download/{id}', [SaleController::class, 'downloadInvoice'])->name('invoice.download');
 Route::get('/get-product-details/{productName}', [ProductController::class, 'getProductDetails'])->name('get-product-details');
 
-
-Route::get('/search-products', [ProductController::class, 'searchProducts'])->name('search-products');
-
 Route::get('/sale-receipt/{id}', [SaleController::class, 'showReceipt'])->name('sale-receipt');
+
+//end Sale route
+
+// Route for downloading invoice
+
+
 
 
 //Customer

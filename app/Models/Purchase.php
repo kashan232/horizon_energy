@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Models\Product;
 class Purchase extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
     protected $guarded = [];
-
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'id');
+    }
     public static function generateInvoiceNo()
     {
         // Define the prefix for the invoice number
@@ -29,6 +32,8 @@ class Purchase extends Model
         // protected $table = 'purchases';
         // Return the new invoice number
         return $prefix . $newNumber;
+
+
     }
 
 }

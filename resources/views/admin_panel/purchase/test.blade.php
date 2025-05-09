@@ -25,6 +25,7 @@
                             <div class="card-body">
                                 <form action="{{ route('store-Purchase') }}" method="POST">
                                     @csrf
+
                                     <div class="row mb-3">
                                         <div class="col-xl-4 col-sm-4">
                                             <div class="form-group" id="supplier-wrapper">
@@ -32,8 +33,8 @@
                                                 <select name="supplier" class="form-control" required>
                                                     <option selected disabled>Select One</option>
                                                     @foreach($Suppliers as $Supplier)
-                                                    <option value="{{ $Supplier->id }}">{{ $Supplier->name }}</option>
-                                                @endforeach
+                                                    <option value="{{ $Supplier->name }}">{{ $Supplier->name }}</option>
+                                                     @endforeach
                                                     {{-- <pre>{{ dd($Suppliers) }}</pre> --}}
                                                 </select>
                                             </div>
@@ -54,6 +55,7 @@
                                                     @foreach($Warehouses as $Warehouse)
                                                     <option value="{{ $Warehouse->name }}">{{ $Warehouse->name }}</option>
                                                     @endforeach
+
                                                 </select>
                                             </div>
                                         </div>
@@ -76,16 +78,17 @@
                                                 <tbody id="purchaseItems">
                                                     <tr>
                                                         <td>
-                                                            <select name="item_category[]" class="item-category" required>
+                                                            <select name="item_category[]" class=" form-control  item-category" required>
                                                                 <option value="" disabled selected>Select Category</option>
                                                                 @foreach($Category as $Categories)
-                                                                <option value="{{ $Categories->category }}">{{ $Categories->category }}</option>
+                                                                <option value="{{ $Categories->id }}">{{ $Categories->category }}</option>
+
                                                                 @endforeach
                                                             </select>
                                                         </td>
                                                         <td>
                                                             <select name="item_name[]" class="form-control item-name" required>
-                                                                <option value="" disabled selected>Select Item</option>
+                                                                <option value="" disabled selected class="form-control ">Select Item</option>
                                                             </select>
                                                         </td>
                                                         <td>
@@ -194,155 +197,121 @@
         $('.select2-basic').select2();
     });
 </script>
-    <script>
-        document.addEventListener('input', function() {
-            // Fetch input values
-            const totalPrice = parseFloat(document.querySelector('.total_price').value) || 0;
-            const discount = parseFloat(document.querySelector('.discount').value) || 0;
-            const paidAmount = parseFloat(document.querySelector('.paid_amount').value) || 0;
+<script>
+    const getItemsByCategoryUrl = "{{ route('get-items-by-category', ['categoryId' => 'CATEGORY_ID']) }}";
+    const getUnitByProductUrl = "{{ route('get-unit-by-product', ['productId' => 'PRODUCT_ID']) }}";
 
-            // Calculate the payable amount
-            const payableAmount = totalPrice - discount;
+    $(document).ready(function () {
+        // Initialize select2
+        $('.item-category, .item-name').select2();
 
-            // Update the payable amount field
-            const payableField = document.querySelector('.payable_amount');
-            payableField.value = payableAmount > 0 ? payableAmount : 0;
-
-            // Calculate the remaining amount
-            const remainingAmount = payableAmount - paidAmount;
-
-            // Update the remaining amount field
-            const remainingField = document.querySelector('input[name="due_amount"]');
-            remainingField.value = remainingAmount > 0 ? remainingAmount : 0;
+        // Update payable and remaining on input
+        $(document).on('input', '.total_price, .discount, .paid_amount', function () {
+            updatePayableAndRemaining();
         });
 
+        // Update row totals on quantity/price change
+        $(document).on('input', '.quantity, .price', function () {
+            calculateTotalAndPayable();
+        });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const purchaseItems = document.getElementById('purchaseItems');
+        // Load items on category change
+        $(document).on('change', '.item-category', function () {
+            const row = $(this).closest('tr');
+            const categoryId = $(this).val();
+            const itemSelect = row.find('.item-name');
 
-          // Define globally from Blade:
-const getItemsByCategoryUrl = "{{ route('get-items-by-category', ['categoryId' => 'CATEGORY_ID']) }}";
-const getUnitByProductUrl = "{{ route('get-unit-by-product', ['productId' => 'PRODUCT_ID']) }}";
-
-// Event listener for category and item selection
-purchaseItems.addEventListener('change', function(e) {
-    const row = e.target.closest('tr');
-
-    if (e.target.classList.contains('item-category')) {
-        const categoryId = e.target.value;
-        const itemSelect = row.querySelector('.item-name');
-
-        if (categoryId) {
-            fetch(getItemsByCategoryUrl.replace('CATEGORY_ID', categoryId))
-                .then(response => response.json())
-                .then(items => {
-                    itemSelect.innerHTML = '<option value="" disabled selected>Select Item</option>';
-                    items.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.name;
-                        option.textContent = item.name;
-                        itemSelect.appendChild(option);
+            if (categoryId) {
+                fetch(getItemsByCategoryUrl.replace('CATEGORY_ID', categoryId))
+                    .then(res => res.json())
+                    .then(data => {
+                        itemSelect.empty().append(`<option disabled selected>Select Item</option>`);
+                        data.forEach(item => {
+                            itemSelect.append(`<option value="${item.id}">${item.name}</option>`);
+                        });
+                        itemSelect.select2();
                     });
-                    $(itemSelect).select2(); // Reinitialize if needed
-                })
-                .catch(error => console.error('Error fetching items:', error));
-        }
-    }
-
-    if (e.target.classList.contains('item-name')) {
-        const productId = e.target.value;
-        const unitInput = row.querySelector('.unit');
-
-        if (productId) {
-            fetch(getUnitByProductUrl.replace('PRODUCT_ID', productId))
-                .then(response => response.json())
-                .then(product => {
-                    unitInput.value = product.unit || '';
-                })
-                .catch(error => console.error('Error fetching unit:', error));
-        }
-    }
-});
-
-            // Adding a new row
-            const addRowButton = document.getElementById('addRow');
-            addRowButton.addEventListener('click', function() {
-                const newRow = `
-                <tr>
-                    <td>
-                        <select name="item_category[]" class="form-control item-category" required>
-                            <option value="" disabled selected>Select Category</option>
-                            @foreach($Category as $Categories)
-                                <option value="{{ $Categories->category }}">{{ $Categories->category }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <select name="item_name[]" class="form-control item-name" required>
-                            <option value="" disabled selected>Select Item</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" name="unit[]" class="form-control unit" readonly>
-                    </td>
-                    <td>
-                        <input type="number" name="quantity[]" class="form-control quantity" required>
-                    </td>
-                    <td>
-                        <input type="number" name="price[]" class="form-control price" required>
-                    </td>
-                    <td>
-                        <input type="number" name="total[]" class="form-control total" readonly>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger remove-row">Delete</button>
-                    </td>
-                </tr>`;
-                purchaseItems.insertAdjacentHTML('beforeend', newRow);
-            });
-
-            // Remove row
-            purchaseItems.addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-row')) {
-                    e.target.closest('tr').remove();
-                }
-            });
-            // Calculate total and payable amount
-            purchaseItems.addEventListener('input', function(e) {
-                calculateTotalAndPayable();
-            });
-
-            // Event listener for the discount input
-            document.querySelector('input[name="discount"]').addEventListener('input', calculateTotalAndPayable);
-
-            // Function to calculate total price and payable amount
-            function calculateTotalAndPayable() {
-                const rows = purchaseItems.querySelectorAll('tr');
-                let totalPrice = 0;
-
-                rows.forEach(row => {
-                    const quantityInput = row.querySelector('.quantity');
-                    const priceInput = row.querySelector('.price');
-                    const totalInput = row.querySelector('.total');
-
-                    if (quantityInput.value && priceInput.value) {
-                        const total = quantityInput.value * priceInput.value;
-                        totalInput.value = total;
-                        totalPrice += total;
-                    } else {
-                        totalInput.value = 0;
-                    }
-                });
-
-                // Update total price
-                document.querySelector('.total_price').value = totalPrice;
-
-                // Calculate and update payable amount
-                const discount = parseFloat(document.querySelector('input[name="discount"]').value) || 0;
-                document.querySelector('.payable_amount').value = totalPrice - discount;
             }
         });
-    </script>
 
+        // Load unit and price on item change
+        $(document).on('change', '.item-name', function () {
+            const row = $(this).closest('tr');
+            const productId = $(this).val();
+
+            if (productId) {
+                fetch(getUnitByProductUrl.replace('PRODUCT_ID', productId))
+                    .then(res => res.json())
+                    .then(data => {
+                        row.find('.unit').val(data.unit);
+                        row.find('.price').val(data.price);
+                        calculateTotalAndPayable();
+                    });
+            }
+        });
+
+        // Add new row
+        $('#addRow').click(function () {
+            const newRow = `
+            <tr>
+                <td>
+                    <select name="item_category[]" class="form-control item-category" required>
+                        <option value="" disabled selected>Select Category</option>
+                        @foreach($Category as $Categories)
+                            <option value="{{ $Categories->id }}">{{ $Categories->category }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select name="item_name[]" class="form-control item-name" required>
+                        <option value="" disabled selected>Select Item</option>
+                    </select>
+                </td>
+                <td><input type="text" name="unit[]" class="form-control unit" readonly></td>
+                <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
+                <td><input type="number" name="price[]" class="form-control price" required></td>
+                <td><input type="number" name="total[]" class="form-control total" readonly></td>
+                <td><button type="button" class="btn btn-danger remove-row">Delete</button></td>
+            </tr>`;
+            $('#purchaseItems').append(newRow);
+            $('.item-category, .item-name').select2(); // Reinitialize
+        });
+
+        // Remove row
+        $(document).on('click', '.remove-row', function () {
+            $(this).closest('tr').remove();
+            calculateTotalAndPayable();
+        });
+
+        // Helper: Calculate totals
+        function calculateTotalAndPayable() {
+            let total = 0;
+
+            $('#purchaseItems tr').each(function () {
+                const qty = parseFloat($(this).find('.quantity').val()) || 0;
+                const price = parseFloat($(this).find('.price').val()) || 0;
+                const rowTotal = qty * price;
+                $(this).find('.total').val(rowTotal);
+                total += rowTotal;
+            });
+
+            $('.total_price').val(total);
+            updatePayableAndRemaining();
+        }
+
+        // Helper: Update payable and remaining
+        function updatePayableAndRemaining() {
+            const totalPrice = parseFloat($('.total_price').val()) || 0;
+            const discount = parseFloat($('.discount').val()) || 0;
+            const paid = parseFloat($('.paid_amount').val()) || 0;
+
+            const payable = totalPrice - discount;
+            const remaining = payable - paid;
+
+            $('.payable_amount').val(payable >= 0 ? payable : 0);
+            $('.remaining_amount').val(remaining >= 0 ? remaining : 0);
+        }
+    });
+</script>
 
 </body>

@@ -5,8 +5,8 @@
         /* Hide unnecessary elements */
         .page-wrapper .navbar-wrapper,
         .page-wrapper .sidebar,
-        .d-flex.justify-content-between.mt-4 { 
-            display: none; 
+        .d-flex.justify-content-between.mt-4 {
+            display: none;
         }
 
         /* Adjust the layout for print */
@@ -79,15 +79,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($purchase->item_name as $index => $item)
+                                            @foreach ($purchase->item_name as $index => $productId)
                                             <tr>
-                                                <td>{{ $purchase->item_category[$index] }}</td>
-                                                <td>{{ $item }}</td>
-                                                <td>{{ $purchase->quantity[$index] }}</td>
-                                                <td>{{ $purchase->price[$index] }}</td>
-                                                <td>{{ $purchase->total[$index] }}</td>
+                                                <td>{{ $categories[(int)$purchase->item_category[$index]] ?? 'N/A' }}</td>
+                                                <td>{{ $purchase->item_name[$index] ?? 'N/A' }}</td>
+
+                                                <td>{{ $purchase->quantity[$index] ?? '0' }}</td>
+                                                <td>{{ $purchase->price[$index] ?? '0' }}</td>
+                                                <td>{{ $purchase->total[$index] ?? '0' }}</td>
                                             </tr>
-                                            @endforeach
+                                        @endforeach
+
+
                                         </tbody>
                                         <tfoot>
                                             <tr>

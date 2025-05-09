@@ -16,7 +16,7 @@
             <div class="bodywrapper__inner">
 
                 <div class="d-flex mb-30 flex-wrap gap-3 justify-content-between align-items-center">
-                    <h6 class="page-title">All Sales</h6>
+                    <h6 class="page-title">All Return Sales</h6>
                     <div class="d-flex flex-wrap justify-content-end gap-2 align-items-center breadcrumb-plugins">
                         <a href="{{ route('add-Sale') }}"
                             class="btn btn-outline--primary h-45">
@@ -86,11 +86,8 @@
                                                             <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('invoice.download', ['id' => $Sale->id]) }}"> <i class="la la-undo"></i> Download Invoice</a>
                                                             <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('sale-receipt', ['id' => $Sale->id]) }}"> <i class="la la-print"></i> Print Receipt</a>
                                                             <!-- New Print Receipt Link -->
-                                                            <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('store-sales-return',['id' => $Sale->id ]) }}
-                                                                "> <i class="la la-undo"></i> Return Sale</a>
-   <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('Sale.returnview',['id' => $Sale->id ]) }}
-                                                                "> <i class="la la-undo"></i> View Return Details</a>
-
+                                                            {{-- <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('sales-return',['id' => $Sale->id ]) }}
+                                                                "> <i class="la la-undo"></i> View Return Details</a> --}}
                                                         </div>
                                                     </div>
                                                 </td>

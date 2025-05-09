@@ -92,7 +92,7 @@
 
                     </div><!-- dashboard-w1 end -->
 
-                    
+
 
 
                 </div><!-- row end-->
@@ -122,26 +122,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($all_product as $product)
-                                            <tr>
-                                                <td class="fw-bold"> {{ $product->product_name }} </td>
-                                                <td> {{ $product->category }} </td>
-                                                <td>
-                                                    <span class="bg--danger px-2 rounded">
-                                                        {{ $product->alert_quantity }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <span class="bg--warning px-2 rounded">
-                                                        {{ $product->stock }}
-                                                    </span>
-                                                </td>
-                                                <td>{{ $product->unit }}</td>
-                                                <td>{{ $product->wholesale_price }}</td>
-                                            </tr>
-                                            @endforeach
-
+                                            @forelse($all_product as $product)
+                                                <tr>
+                                                    <td class="fw-bold">{{ $product->name }}</td>
+                                                    <td>{{ $product->category->category ?? 'N/A' }}</td>
+                                                    <td>
+                                                        <span class="bg-danger text-white px-2 rounded">
+                                                            {{ $product->alert_quantity }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="bg-warning text-dark px-2 rounded">
+                                                            {{ $product->stock }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ $product->unit->unit ?? 'N/A' }}</td>
+                                                    <td>{{ number_format($product->wholesale_price, 2) }} PKR</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center">No products available</td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
+
+
                                     </table><!-- table end -->
                                 </div>
                             </div>
@@ -167,7 +172,7 @@
                                         <tbody>
                                             @foreach ($all_product as $product)
                                             <tr>
-                                                <td>{{ $product->product_name }}</td>
+                                                <td>{{ $product->name }}</td>
                                                 <td>{{ $product->stock }}</td>
                                                 <td>{{ $product->wholesale_price }}</td>
                                                 <td>{{ $product->total_stock_value }}</td>

@@ -318,7 +318,7 @@ function attachRowEvents(row) {
                     .then(items => {
                         itemSelect.html('<option value="" disabled selected>Select Item</option>');
                         items.forEach(item => {
-                            itemSelect.append(`<option value="${item.product_name}">${item.product_name}</option>`);
+                            itemSelect.append(`<option value="${item.name}">${item.name}</option>`);
                         });
                     })
                     .catch(error => console.error('Error fetching items:', error));
@@ -335,7 +335,7 @@ function attachRowEvents(row) {
                 fetch(`{{ route('get-product-details', ':productName') }}`.replace(':productName', productName))
                     .then(response => response.json())
                     .then(product => {
-                        priceInput.val(product.retail_price);
+                        priceInput.val(product.price);
                         row.find('.quantity').trigger('input'); // Update total
                     })
                     .catch(error => console.error('Error fetching product details:', error));
