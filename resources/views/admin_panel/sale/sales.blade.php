@@ -82,14 +82,12 @@
                                                         </button>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                             <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('sale.edit', ['id' => $Sale->id]) }}"> <i class="la la-pen"></i> Edit</a>
-                                                            <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('purchase-view', ['id' => $Sale->id]) }}"> <i class="la la-eye"></i> View</a>
+                                                            <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('sale-view', ['id' => $Sale->id]) }}"> <i class="la la-eye"></i> View</a>
                                                             <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('invoice.download', ['id' => $Sale->id]) }}"> <i class="la la-undo"></i> Download Invoice</a>
                                                             <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('sale-receipt', ['id' => $Sale->id]) }}"> <i class="la la-print"></i> Print Receipt</a>
                                                             <!-- New Print Receipt Link -->
-                                                            <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('store-sales-return',['id' => $Sale->id ]) }}
+                                                            <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('sales-return',['id' => $Sale->id ]) }}
                                                                 "> <i class="la la-undo"></i> Return Sale</a>
-   <a class="dropdown-item btn btn-sm btn-outline--primary ms-1 editBtn" href="{{ route('Sale.returnview',['id' => $Sale->id ]) }}
-                                                                "> <i class="la la-undo"></i> View Return Details</a>
 
                                                         </div>
                                                     </div>

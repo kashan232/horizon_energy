@@ -49,46 +49,46 @@ class SaleController extends Controller
         $items = Product::where('category', $categoryId)->get(); // Adjust according to your database structure
         return response()->json($items);
     }
-    // public function salesreturn($id)
-    // {
-    //     if (Auth::id()) {
-    //         $userId = Auth::id();
+    public function salesreturn($id)
+    {
+        if (Auth::id()) {
+            $userId = Auth::id();
 
-    //         $Customers = Customer::get();
-    //         $sale = Sale::where('id', $id)->first();
+            $Customers = Customer::get();
+            $sale = Sale::where('id', $id)->first();
 
-    //         if ($sale) {
-    //             $itemNames = json_decode($sale->item_name, true);
-    //             $quantities = json_decode($sale->quantity, true);
-    //             $prices = json_decode($sale->price, true);
-    //             $totals = json_decode($sale->total, true);
+            if ($sale) {
+                $itemNames = json_decode($sale->item_name, true);
+                $quantities = json_decode($sale->quantity, true);
+                $prices = json_decode($sale->price, true);
+                $totals = json_decode($sale->total, true);
 
-    //             $stocks = [];
-    //             foreach ($itemNames as $itemName) {
-    //                 $product = Product::where('name', $itemName)->first();
-    //                 $stocks[] = $product ? $product->stock : 0;
-    //             }
+                $stocks = [];
+                foreach ($itemNames as $itemName) {
+                    $product = Product::where('name', $itemName)->first();
+                    $stocks[] = $product ? $product->stock : 0;
+                }
 
-    //             return view('admin_panel.sale.return_sale', [
+                return view('admin_panel.sale.return_sale', [
 
-    //                     'sale' => $sale,
-    //                     'Customers' => $Customers,
-    //                     'itemNames' => $itemNames,
-    //                     'quantities' => $quantities,
-    //                     'prices' => $prices,
-    //                     'totals' => $totals,
-    //                     'stocks' => $stocks
-    //                 ]);
+                        'sale' => $sale,
+                        'Customers' => $Customers,
+                        'itemNames' => $itemNames,
+                        'quantities' => $quantities,
+                        'prices' => $prices,
+                        'totals' => $totals,
+                        'stocks' => $stocks
+                    ]);
 
-    //         } else {
-    //             return redirect()->back()->with('error', 'Sale not found');
-    //         }
-    //     } else {
-    //         return redirect()->back();
-    //     }
-    // }
+            } else {
+                return redirect()->back()->with('error', 'Sale not found');
+            }
+        } else {
+            return redirect()->back();
+        }
+    }
     //------start sales retunn code
-    
+
     function storeSalesReturn(Request $request){
             // Find the sale by ID
             $sale = Sale::find($request->sales_id);
@@ -169,7 +169,7 @@ class SaleController extends Controller
         $categories = \App\Models\Category::whereIn('id', $categoryIds)->pluck('category', 'id'); // replace 'category_name' with your actual column
         $products = \App\Models\Product::whereIn('id', $productIds)->pluck('name', 'id');     // replace 'product_name' with your actual column
 
-        return view('admin_panel.purchase.view', [
+        return view('admin_panel.sale.view', [
             'purchase' => $purchase,
             'categories' => $categories,
             'products' => $products,

@@ -192,7 +192,8 @@ Route::post('/store-Purchase', [PurchaseController::class, 'store_Purchase'])->n
 Route::post('/purchases-payment', [PurchaseController::class, 'purchases_payment'])->name('purchases-payment');
 Route::get('/get-items-by-category/{categoryId}', [PurchaseController::class, 'getItemsByCategory'])->name('get-items-by-category');
 
-Route::get('/purchase-view/{id}', [SaleController::class, 'view'])->name('purchase-view');
+
+Route::get('/purchase-view/{id}', [PurchaseController::class, 'view'])->name('purchase-view');
 Route::get('/purchase-return/{id}', [PurchaseController::class, 'purchase_return'])->name('purchase-return');
 Route::post('/store-purchase-return', [PurchaseController::class, 'store_purchase_return'])->name('store-purchase-return');
 Route::get('/all-purchase-return', [PurchaseController::class, 'all_purchase_return'])->name('all-purchase-return');
@@ -208,7 +209,7 @@ Route::post('purchase/update', [PurchaseController::class, 'update'])->name('pur
 
 
 //start Sale route
-// Route::get('/sales-return/{id}', [SaleController::class, 'salesreturn'])->name('sales-return');
+Route::get('/sales-return/{id}', [SaleController::class, 'salesreturn'])->name('sales-return');
 
 Route::get('/Sale', [SaleController::class, 'Sale'])->name('Sale');
 Route::get('/add-Sale', [SaleController::class, 'add_Sale'])->name('add-Sale');
@@ -223,7 +224,7 @@ Route::get('/invoice/download/{id}', [SaleController::class, 'downloadInvoice'])
 Route::get('/get-product-details/{productName}', [ProductController::class, 'getProductDetails'])->name('get-product-details');
 
 Route::get('/sale-receipt/{id}', [SaleController::class, 'showReceipt'])->name('sale-receipt');
-
+Route::get('/sale-view/{id}', [SaleController::class, 'view'])->name('sale-view');
 //end Sale route
 
 // Route for downloading invoice

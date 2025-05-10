@@ -2,6 +2,7 @@
 
 <style>
     @media print {
+
         /* Hide unnecessary elements */
         .page-wrapper .navbar-wrapper,
         .page-wrapper .sidebar,
@@ -19,9 +20,9 @@
         .body-wrapper {
             margin-top: 0;
         }
+
         .print-btn,
-        .back-btn
-        {
+        .back-btn {
             display: none;
         }
 
@@ -46,7 +47,8 @@
                     <div class="row">
                         <div class="col-12 text-center mb-4">
                             <!-- Logo Section -->
-                            <img src="{{ asset('assets/admin/images/dashbord_logo.png') }}" alt="Company Logo" class="mb-3" style="max-width: 150px;">
+                            <img src="{{ asset('assets/admin/images/dashbord_logo.png') }}" alt="Company Logo"
+                                class="mb-3" style="max-width: 150px;">
                             <h2>Invoice</h2>
                         </div>
                     </div>
@@ -57,7 +59,8 @@
                                     <!-- Invoice Header -->
                                     <div class="d-flex justify-content-between mb-4">
                                         <div>
-                                            <h5 class="card-title">Invoice No: <strong>{{ $purchase->invoice_no }}</strong></h5>
+                                            <h5 class="card-title">Invoice No:
+                                                <strong>{{ $purchase->invoice_no }}</strong></h5>
                                             <p><strong>Purchase Date:</strong> {{ $purchase->purchase_date }}</p>
                                         </div>
                                         <div>
@@ -79,18 +82,15 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($purchase->item_name as $index => $productId)
-                                            <tr>
-                                                <td>{{ $categories[(int)$purchase->item_category[$index]] ?? 'N/A' }}</td>
-                                                <td>{{ $purchase->item_name[$index] ?? 'N/A' }}</td>
-
-                                                <td>{{ $purchase->quantity[$index] ?? '0' }}</td>
-                                                <td>{{ $purchase->price[$index] ?? '0' }}</td>
-                                                <td>{{ $purchase->total[$index] ?? '0' }}</td>
-                                            </tr>
-                                        @endforeach
-
-
+                                                @foreach($purchase->item_name as $index => $item)
+                                                    <tr>
+                                                        <td>{{  $categories[$purchase->item_category[$index]] }}</td>
+                                                        <td>{{ $item }}</td>
+                                                        <td>{{ $purchase->quantity[$index] }}</td>
+                                                        <td>{{ $purchase->price[$index] }}</td>
+                                                        <td>{{ $purchase->total[$index] }}</td>
+                                                    </tr>
+                                                @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr>

@@ -309,12 +309,13 @@
                                 </a>
                             </li> --}}
                             <li class="sidebar-menu-item  ">
-                                <a href="#"
+                                <a href="{{  route('Sale.returnview') }}"
                                     class="nav-link">
                                     <i class="menu-icon la la-dot-circle"></i>
                                     <span class="menu-title">Sales Return</span>
                                 </a>
                             </li>
+
                         </ul>
                     </div>
                 </li>

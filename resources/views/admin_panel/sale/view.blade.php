@@ -5,8 +5,8 @@
         /* Hide unnecessary elements */
         .page-wrapper .navbar-wrapper,
         .page-wrapper .sidebar,
-        .d-flex.justify-content-between.mt-4 { 
-            display: none; 
+        .d-flex.justify-content-between.mt-4 {
+            display: none;
         }
 
         /* Adjust the layout for print */
@@ -61,7 +61,7 @@
                                             <p><strong>Purchase Date:</strong> {{ $purchase->purchase_date }}</p>
                                         </div>
                                         <div>
-                                            <p><strong>Supplier:</strong> {{ $purchase->supplier }}</p>
+                                            <p><strong>customer:</strong> {{ $purchase->supplier }}</p>
                                             <p><strong>Warehouse:</strong> {{ $purchase->warehouse_id }}</p>
                                         </div>
                                     </div>
@@ -80,8 +80,12 @@
                                         </thead>
                                         <tbody>
                                             @foreach($purchase->item_name as $index => $item)
+
+                                        {{-- {{dd($categories->category)}} --}}
+
                                             <tr>
-                                                <td>{{ $purchase->item_category[$index] }}</td>
+                                               <td>{{ $purchase->item_category[$index] ?? '' }}</td>
+
                                                 <td>{{ $item }}</td>
                                                 <td>{{ $purchase->quantity[$index] }}</td>
                                                 <td>{{ $purchase->price[$index] }}</td>

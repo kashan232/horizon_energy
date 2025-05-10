@@ -152,7 +152,6 @@
                         @endforeach
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -185,10 +184,10 @@
                     </div>
                 </div>
                 <!-- Sidebar End -->
-    
+
                 <!-- Products Start -->
                 <div class="col-xl-9 col-lg-8 order-lg-2">
-                    
+
                     <!-- Deals Start -->
                     <div class="mt-5">
                         <h2 class="mb-4">All Deals / Packages</h2>
@@ -216,13 +215,13 @@
                         </div>
                     </div>
                     <!-- Deals End -->
-    
+
                 </div>
             </div>
         </div>
     </section>
 
-    
+
     <section class="pt-100 pb-100 bg-light text-center">
         <div class="container">
             <h2 class="mb-4">About Horizon Solar</h2>
@@ -265,7 +264,6 @@
     <footer class="pt-100 mt-120 text-white bg-dark">
         <div class="container">
             <div class="row gy-4">
-
                 <!-- Logo and Intro -->
                 <div class="col-lg-4 col-md-6">
                     <a class="footer_logo d-block mb-3" href="#">
@@ -344,7 +342,7 @@
                                 placeholder="03XX-XXXXXXX">
                         </div>
 
-                      
+
                         <div class="col-md-4">
                             <label class="form-label">Order Date</label>
                             @php $today = date('Y-m-d'); @endphp
@@ -357,7 +355,7 @@
                             <input type="text" class="form-control" name="address"
                                 placeholder="Installation Site Address">
                         </div>
-{{-- 
+{{--
                         <div class="col-md-4">
                             <label class="form-label">Type of Installation</label>
                             <select class="form-control" name="installation_type">
@@ -666,7 +664,7 @@
         });
     </script>
 
-    
+
 </body>
 
 </html>

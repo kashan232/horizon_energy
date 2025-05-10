@@ -56,22 +56,37 @@ class PurchaseController extends Controller
         return response()->json($products);
     }
 
-    public function view($id)
+     public function view($id)
     {
-        // Fetch the purchase details
-        $purchase = Purchase::findOrFail($id);
 
-        // Decode the JSON fields if necessary
-        $purchase->item_category = json_decode($purchase->item_category);
-        $purchase->item_name = json_decode($purchase->item_name);
-        $purchase->quantity = json_decode($purchase->quantity);
-        $purchase->price = json_decode($purchase->price);
-        $purchase->total = json_decode($purchase->total);
+        // Fetch the purchase record
+        $purchase = \App\Models\Purchase::findOrFail($id);
 
+        // Decode JSON fields safely (to array)
+        $purchase->item_category = is_array($purchase->item_category) ? $purchase->item_category : json_decode($purchase->item_category, true);
+        $purchase->item_name = is_array($purchase->item_name) ? $purchase->item_name : json_decode($purchase->item_name, true);
+        $purchase->quantity = is_array($purchase->quantity) ? $purchase->quantity : json_decode($purchase->quantity, true);
+        $purchase->price = is_array($purchase->price) ? $purchase->price : json_decode($purchase->price, true);
+        $purchase->total = is_array($purchase->total) ? $purchase->total : json_decode($purchase->total, true);
+
+        // Fetch category and product names using IDs
+        $categoryIds = $purchase->item_category ?? [];
+        $productIds = $purchase->item_name ?? [];
+
+        $categories = \App\Models\Category::whereIn('id', $categoryIds)->pluck('category', 'id'); // replace 'category_name' with your actual column
+
+
+       
+
+        $products = \App\Models\Product::whereIn('id', $productIds)->pluck('name', 'id');     // replace 'product_name' with your actual column
+//  dd($categories);
         return view('admin_panel.purchase.view', [
             'purchase' => $purchase,
+            'categories' => $categories,
+            'products' => $products,
         ]);
     }
+
 
     public function store_Purchase(Request $request)
     {

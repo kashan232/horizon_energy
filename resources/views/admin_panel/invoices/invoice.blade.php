@@ -117,7 +117,8 @@
         <!-- Header Section -->
         <div class="invoice-header">
             <div>
-                <img src="logo_url_here" alt="Company Logo">
+                {{-- <img src="logo_url_here" alt="Company Logo"> --}}
+                <img src="{{ asset('assets/admin/images/BB_logo.png') }}" alt="Company Logo">>
             </div>
             <div class="invoice-details">
                 <h1>Invoice</h1>
@@ -130,10 +131,10 @@
         <div class="billing-info">
             <div>
                 <h4>Billing</h4>
-                <p><strong>Name:</strong> {{ $customer->customer_name }}</p>
-                <p><strong>Mobile:</strong> {{ $customer->customer_phone }}</p>
-                <p><strong>Email:</strong> {{ $customer->customer_email }}</p>
-                <p><strong>Address:</strong> {{ $customer->customer_address }}</p>
+                <p><strong>Name:</strong> {{ $customer->name }}</p>
+                <p><strong>Mobile:</strong> {{ $customer->phone }}</p>
+                <p><strong>Email:</strong> {{ $customer->email }}</p>
+                <p><strong>Address:</strong> {{ $customer->address }}</p>
                 <p><strong>Warehouse:</strong> {{ $sale->warehouse_id }}</p>
             </div>
         </div>
@@ -176,7 +177,7 @@
             <p>Discount: {{ number_format($sale->discount, 0) }}</p>
             <p>Grand Total: {{ number_format($sale->total_price - $sale->discount, 0) }}</p>
             <p>Received: {{ number_format($sale->cash_received, 0) }}</p>
-            <p>Change to Return: {{ number_format($sale->change_return, 0) }}</p>
+            <p>Change to Return: {{ $sale->change_return }}</p>
         </div>
 
         <!-- Footer -->
