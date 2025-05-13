@@ -27,9 +27,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
-
+{{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/> --}}
+{{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick//slick-theme.css"/> --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <!-- <link rel="stylesheet" href="assets/global/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/admin/css/vendor/bootstrap-toggle.min.css">
     <link rel="stylesheet" href="assets/global/css/all.min.css">
@@ -39,6 +42,7 @@
     <link rel="stylesheet" href="assets/admin/css/app.css?v=1">
     <link rel="stylesheet" href="assets/admin/css/custom.css"> -->
 
+<!-- In head -->
 
 
 

@@ -94,14 +94,19 @@ Route::get('/search-products', [ProductController::class, 'searchProducts'])->na
 //end product
 
 //start Deals
+Route::get('/products/search', [DealController::class, 'search'])->name('products.search');
+
 Route::get('/deals', [DealController::class, 'index'])->middleware(['auth', 'admin'])->name('deal.index');
 Route::post('/deals', [DealController::class, 'store'])->name('deals.store');
 Route::get('/deals/create', [DealController::class, 'create'])->name('deal.create');
 Route::get('/deal/{id}', [DealController::class, 'show'])->name('deals.show');
 Route::post('/deals/{id}/toggle', [DealController::class, 'toggleStatus'])->name('deal.toggle');
+Route::post('/deals/update', [DealController::class, 'updatedeal'])->name('deal.update');
 Route::delete('/deals/{id}', [DealController::class, 'destroy'])->name('deal.destroy');
     // // Public Side
 Route::get('/all-deals', [DealController::class, 'webpage'])->name('all-deal.public');
+Route::get('/edit-deals/{id}', [DealController::class, 'edit'])->name('deal.edit');
+//end Deals
 //end Deals
 
     // Cart Side
@@ -210,7 +215,6 @@ Route::post('purchase/update', [PurchaseController::class, 'update'])->name('pur
 
 //start Sale route
 Route::get('/sales-return/{id}', [SaleController::class, 'salesreturn'])->name('sales-return');
-
 Route::get('/Sale', [SaleController::class, 'Sale'])->name('Sale');
 Route::get('/add-Sale', [SaleController::class, 'add_Sale'])->name('add-Sale');
 Route::post('/store-Sale', [SaleController::class, 'store_Sale'])->name('store-Sale');
@@ -222,7 +226,6 @@ Route::get('/Sale/return/view', [SaleController::class, 'Salereturnview'])->name
 Route::post('/store-sales-return', [SaleController::class, 'storeSalesReturn'])->name('store-sales-return');
 Route::get('/invoice/download/{id}', [SaleController::class, 'downloadInvoice'])->name('invoice.download');
 Route::get('/get-product-details/{productName}', [ProductController::class, 'getProductDetails'])->name('get-product-details');
-
 Route::get('/sale-receipt/{id}', [SaleController::class, 'showReceipt'])->name('sale-receipt');
 Route::get('/sale-view/{id}', [SaleController::class, 'view'])->name('sale-view');
 //end Sale route

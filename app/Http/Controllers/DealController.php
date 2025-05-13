@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Deal;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class DealController extends Controller
@@ -12,11 +13,30 @@ class DealController extends Controller
         $deals = Deal::latest()->get();
         return view('admin_panel.deal.index', compact('deals'));
     }
-
+  public function edit($id)
+    {
+     $deals = Deal::where('id',$id)->get(); // or ->firstOrFail()
+       $products = Product::all();
+return view('admin_panel.deal.edit', compact('deals','products'));
+    }
     public function create()
     {
-        return view('admin_panel.deal.create');
+        $product = Product::all();
+        return view('admin_panel.deal.create',['products'=>$product]);
     }
+
+public function search(Request $request)
+{
+    $term = $request->get('term', '');
+
+    $products = Product::where('name', 'LIKE', '%' . $term . '%')
+        ->take(10)
+        ->get(['id', 'name']);
+
+    return response()->json($products);
+}
+
+
     public function destroy($id)
 {
     $deal = Deal::find($id);
@@ -31,30 +51,69 @@ class DealController extends Controller
 }
 
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'price' => 'required',
-            'image' => 'nullable|image',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required',
+        'description' => 'required',
+        'price' => 'required',
+        'image' => 'nullable|image',
+    ]);
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('deals', 'public');
+    $imagePath = null;
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $destinationPath = public_path('assets/admin/deal');
+        $image->move($destinationPath, $imageName);
+        $imagePath = 'assets/admin/deal/' . $imageName;
+    }
+
+    Deal::create([
+        'title' => $request->title,
+        'description' => $request->description,
+        'price' => $request->price,
+        'duration' => $request->duration,
+        'image' => $imagePath,
+       'product' => implode(',', $request->tappa),
+    ]);
+
+    return redirect()->route('deal.index')->with('success', 'Deal added successfully!');
+}
+
+public function updatedeal(Request $request)
+{
+    $request->validate([
+        'title' => 'required',
+        'description' => 'required',
+        'price' => 'required',
+        'image' => 'nullable|image|mimes:jpeg,jpg,png',
+    ]);
+
+    $deal = Deal::findOrFail($request->id);
+
+    if ($request->hasFile('image')) {
+        // Delete old image if exists
+        if ($deal->image && file_exists(public_path($deal->image))) {
+            unlink(public_path($deal->image));
         }
 
-        Deal::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'price' => $request->price,
-            'duration' => $request->duration,
-            'image' => $imagePath,
-        ]);
-
-        return redirect()->route('deal.index')->with('success', 'Deal added successfully!');
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $destinationPath = public_path('assets/admin/deal');
+        $image->move($destinationPath, $imageName);
+        $deal->image = 'assets/admin/deal/' . $imageName;
     }
+
+    $deal->title = $request->title;
+    $deal->description = $request->description;
+    $deal->price = $request->price;
+    $deal->duration = $request->duration;
+     $deal->product = implode(',', $request->tappa);
+    $deal->save();
+
+    return redirect()->route('deal.index')->with('success', 'Deal updated successfully!');
+}
 
     public function toggleStatus($id)
     {
@@ -87,7 +146,7 @@ class DealController extends Controller
         ]);
 
         session(['client_info' => $request->only('name', 'email', 'phone')]);
-        session()->put('client_info_submitted', true); 
+        session()->put('client_info_submitted', true);
         return redirect()->route('cart.show')->with('success', 'Client information saved successfully!');
     }
 

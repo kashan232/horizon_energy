@@ -29,7 +29,7 @@ class HomeController extends Controller
 
     $deals = Deal::where('status', true)->get(); // Sare deals bhi le ayenge
 
-    return view('welcome', compact('products', 'all_categories', 'deals'));
+    return view('testting', compact('products', 'all_categories', 'deals'));
 }
 
     public function home()
