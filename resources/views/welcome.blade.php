@@ -559,7 +559,6 @@
         });
     });
 </script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const dealModal = document.getElementById('dealModal');
@@ -591,152 +590,151 @@
         });
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let cartItems = document.getElementById("cartItems");
+        let subtotalElement = document.getElementById("subtotal");
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let cartItems = document.getElementById("cartItems");
-            let subtotalElement = document.getElementById("subtotal");
+        document.querySelectorAll(".add_to_cart").forEach(button => {
+            button.addEventListener("click", function() {
+                let productCard = this.closest(".single_menu_text");
+                let itemName = productCard.querySelector(".title").textContent.trim();
+                let category = productCard.querySelector(".category").textContent.trim();
+                let subcategory = productCard.querySelector(".text-danger").textContent.trim();
+                let unit = productCard.querySelector(".unit")?.textContent.trim() || 'N/A';
+                let price = parseFloat(productCard.querySelector("h3").textContent.replace(
+                    "Pkr:", "").trim());
+                let quantity = 1;
+                let total = price * quantity;
 
-            document.querySelectorAll(".add_to_cart").forEach(button => {
-                button.addEventListener("click", function() {
-                    let productCard = this.closest(".single_menu_text");
-                    let itemName = productCard.querySelector(".title").textContent.trim();
-                    let category = productCard.querySelector(".category").textContent.trim();
-                    let subcategory = productCard.querySelector(".text-danger").textContent.trim();
-                    let unit = productCard.querySelector(".unit")?.textContent.trim() || 'N/A';
-                    let price = parseFloat(productCard.querySelector("h3").textContent.replace(
-                        "Pkr:", "").trim());
-                    let quantity = 1;
-                    let total = price * quantity;
+                let newRow = `
+                <tr>
+                    <td>${itemName}</td>
+                    <td>${category}</td>
+                    <td>${subcategory}</td>
+                    <td>${unit}</td>
+                    <td>${price}</td>
+                    <td>
+                        <input type="number" class="form-control quantity-input text-center" value="${quantity}" min="1" data-price="${price}" style="width: 70px;">
+                    </td>
+                    <td class="item-total">${total}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete-item">X</button>
+                    </td>
+                </tr>`;
 
-                    let newRow = `
-                    <tr>
-                        <td>${itemName}</td>
-                        <td>${category}</td>
-                        <td>${subcategory}</td>
-                        <td>${unit}</td>
-                        <td>${price}</td>
-                        <td>
-                            <input type="number" class="form-control quantity-input text-center" value="${quantity}" min="1" data-price="${price}" style="width: 70px;">
-                        </td>
-                        <td class="item-total">${total}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm delete-item">X</button>
-                        </td>
-                    </tr>`;
-
-                    cartItems.insertAdjacentHTML("beforeend", newRow);
-                    updateTotals();
-                });
+                cartItems.insertAdjacentHTML("beforeend", newRow);
+                updateTotals();
             });
-
-            // Function to update subtotal
-            function updateTotals() {
-                let subtotal = 0;
-                document.querySelectorAll(".item-total").forEach(cell => {
-                    subtotal += parseFloat(cell.textContent);
-                });
-                subtotalElement.textContent = `PKR ${subtotal.toFixed(2)}`;
-            }
-
-            // Event delegation for quantity change and delete button
-            cartItems.addEventListener("input", function(event) {
-                if (event.target.classList.contains("quantity-input")) {
-                    let quantityInput = event.target;
-                    let price = parseFloat(quantityInput.getAttribute("data-price"));
-                    let quantity = parseInt(quantityInput.value) || 1;
-
-                    let totalCell = quantityInput.closest("tr").querySelector(".item-total");
-                    totalCell.textContent = (price * quantity).toFixed(2);
-
-                    updateTotals();
-                }
-            });
-
-            cartItems.addEventListener("click", function(event) {
-                if (event.target.classList.contains("delete-item")) {
-                    event.target.closest("tr").remove();
-                    updateTotals();
-                }
-            });
-
         });
 
-        document.getElementById("confirmOrder").addEventListener("click", function() {
-            let orderData = {
-                client_name: document.querySelector("[name='client_name']").value.trim(),
-                sale_date: document.querySelector("[name='sale_date']").value.trim(),
-                order_name: document.querySelector("[name='order_name']").value.trim(),
-                program_date: document.querySelector("[name='program_date']").value.trim(),
-                delivery_time: document.querySelector("[name='delivery_time']").value.trim(),
-                venue: document.querySelector("[name='venue']").value.trim(),
-                person_program: document.querySelector("[name='person_program']").value.trim(),
-                event_type: document.querySelector("[name='event_type']").value.trim(),
-                special_instructions: document.querySelector("[name='special_instructions']").value.trim(),
-                total_price: document.getElementById("subtotal").textContent.replace("PKR ", "").trim(),
-                items: []
-            };
-
-            document.querySelectorAll("#cartItems tr").forEach(row => {
-                orderData.items.push({
-                    item_name: row.children[0].textContent.trim(),
-                    item_category: row.children[1].textContent.trim(),
-                    item_subcategory: row.children[2]?.textContent.trim() ||
-                    "", // Handle missing subcategory
-                    unit: row.children[3].textContent.trim(),
-                    price: row.children[4].textContent.trim(),
-                    quantity: row.querySelector(".quantity-input").value,
-                    total: row.children[6].textContent.trim(),
-                });
+        // Function to update subtotal
+        function updateTotals() {
+            let subtotal = 0;
+            document.querySelectorAll(".item-total").forEach(cell => {
+                subtotal += parseFloat(cell.textContent);
             });
+            subtotalElement.textContent = `PKR ${subtotal.toFixed(2)}`;
+        }
 
-            fetch("{{ route('save.order') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            "content")
-                    },
-                    body: JSON.stringify(orderData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            title: "Order Placed!",
-                            text: "Your order has been placed successfully.",
-                            icon: "success",
-                            confirmButtonText: "OK"
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                location.reload(); // Page refresh after closing alert
-                            }
-                        });
+        // Event delegation for quantity change and delete button
+        cartItems.addEventListener("input", function(event) {
+            if (event.target.classList.contains("quantity-input")) {
+                let quantityInput = event.target;
+                let price = parseFloat(quantityInput.getAttribute("data-price"));
+                let quantity = parseInt(quantityInput.value) || 1;
 
-                        document.getElementById("cartModal").classList.remove("show");
-                        document.querySelector(".modal-backdrop")?.remove(); // Handle modal backdrop safely
-                        document.getElementById("cartItems").innerHTML = ""; // Clear Cart
-                        document.getElementById("subtotal").textContent = "PKR 0";
-                    } else {
-                        Swal.fire({
-                            title: "Error!",
-                            text: "There was an issue saving your order. Please try again.",
-                            icon: "error",
-                            confirmButtonText: "OK"
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
+                let totalCell = quantityInput.closest("tr").querySelector(".item-total");
+                totalCell.textContent = (price * quantity).toFixed(2);
+
+                updateTotals();
+            }
+        });
+
+        cartItems.addEventListener("click", function(event) {
+            if (event.target.classList.contains("delete-item")) {
+                event.target.closest("tr").remove();
+                updateTotals();
+            }
+        });
+
+    });
+
+    document.getElementById("confirmOrder").addEventListener("click", function() {
+        let orderData = {
+            client_name: document.querySelector("[name='client_name']").value.trim(),
+            sale_date: document.querySelector("[name='sale_date']").value.trim(),
+            order_name: document.querySelector("[name='order_name']").value.trim(),
+            program_date: document.querySelector("[name='program_date']").value.trim(),
+            delivery_time: document.querySelector("[name='delivery_time']").value.trim(),
+            venue: document.querySelector("[name='venue']").value.trim(),
+            person_program: document.querySelector("[name='person_program']").value.trim(),
+            event_type: document.querySelector("[name='event_type']").value.trim(),
+            special_instructions: document.querySelector("[name='special_instructions']").value.trim(),
+            total_price: document.getElementById("subtotal").textContent.replace("PKR ", "").trim(),
+            items: []
+        };
+
+        document.querySelectorAll("#cartItems tr").forEach(row => {
+            orderData.items.push({
+                item_name: row.children[0].textContent.trim(),
+                item_category: row.children[1].textContent.trim(),
+                item_subcategory: row.children[2]?.textContent.trim() ||
+                "", // Handle missing subcategory
+                unit: row.children[3].textContent.trim(),
+                price: row.children[4].textContent.trim(),
+                quantity: row.querySelector(".quantity-input").value,
+                total: row.children[6].textContent.trim(),
+            });
+        });
+
+        fetch("{{ route('save.order') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        "content")
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: "Order Placed!",
+                        text: "Your order has been placed successfully.",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload(); // Page refresh after closing alert
+                        }
+                    });
+
+                    document.getElementById("cartModal").classList.remove("show");
+                    document.querySelector(".modal-backdrop")?.remove(); // Handle modal backdrop safely
+                    document.getElementById("cartItems").innerHTML = ""; // Clear Cart
+                    document.getElementById("subtotal").textContent = "PKR 0";
+                } else {
                     Swal.fire({
                         title: "Error!",
-                        text: "Something went wrong. Please try again later.",
+                        text: "There was an issue saving your order. Please try again.",
                         icon: "error",
                         confirmButtonText: "OK"
                     });
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                Swal.fire({
+                    title: "Error!",
+                    text: "Something went wrong. Please try again later.",
+                    icon: "error",
+                    confirmButtonText: "OK"
                 });
-        });
-    </script>
+            });
+    });
+</script>
     <!-- JavaScript to toggle sub-menu visibility -->
     <script>
         document.querySelectorAll('.category-toggle').forEach(function(categoryLink) {

@@ -310,7 +310,7 @@ sidebarItems.forEach(function (item) {
 <script>
     $(document).ready(function() {
         $('#tappa').select2({
-            placeholder: "Select Tappas",
+            placeholder: "Select Product",
             allowClear: true
         });
     });

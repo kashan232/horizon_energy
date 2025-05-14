@@ -207,14 +207,14 @@ table{
 
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${count++}</td>
+                <td style="text-align:center">${count++}</td>
                 <td>${data.name}</td>
                 <td>${data.salary}</td>
                 <td>${paid}</td>
                 <td><span class="badge bg-danger">${due > 0 ? due : 0}</span></td>
                 <td><span class="badge bg-success">${data.advance}</span></td>
                 <td>${lastMonthPaid}</td>
-                <td>
+                <td style="text-align:center">
                     <button class="btn btn-success btn-sm" onclick="paySalary('${emp}')">Pay</button>
                     <button class="btn btn-warning btn-sm" onclick="giveAdvance('${emp}')">Advance</button>
                 </td>
