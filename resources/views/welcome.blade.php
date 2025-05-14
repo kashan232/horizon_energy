@@ -160,7 +160,7 @@
         <div class="container">
             <div class="row">
                 <!-- Sidebar Start -->
-                <div class="col-xl-3 col-lg-4 col-md-6 order-2 wow fadeInLeft">
+                <div class="col-xl-3 col-lg-4 col-md-6 ">
                     <div class="menu_sidebar sticky_sidebar">
                         <div class="sidebar_wizard sidebar_category mt_25">
                             <h2>Categories</h2>
@@ -186,48 +186,78 @@
                 <!-- Sidebar End -->
 
                 <!-- Products Start -->
-                <div class="col-xl-9 col-lg-8 order-lg-2">
+                <div class="col-xl-9 col-lg-9 col-md-6">
+    <!-- Deals Start -->
+    <div class="mt-5">
+        <h2 class="mb-4">All Deals / Packages</h2>
 
-                    <!-- Deals Start -->
-                    <div class="mt-5">
-                        <h2 class="mb-4">All Deals / Packages</h2>
-                        <div class="row">
-                            @foreach ($deals as $deal)
-                                <div class="col-xl-4 col-sm-6 wow fadeInUp">
-                                    <div class="single_menu">
-                                        <div class="single_menu_img">
-                                            <img src="{{ asset('deal_images/' . $deal->image) }}" alt="deal" class="img-fluid w-100">
-                                        </div>
-                                        <div class="single_menu_text">
-                                            <a class="category" href="#">{{ $deal->category->name ?? 'No Category' }}</a>
-                                            <a class="title" href="#">
-                                                {{ $deal->title }}
-                                            </a>
-                                            <p class="descrption">{{ $deal->description }}</p>
-                                            <div class="d-flex align-items-center">
-                                                <a class="add_to_cart btn btn-success text-white" href="#" data-bs-toggle="modal" data-bs-target="#dealModal">Book Now</a>
-                                                <h3>Pkr:{{ $deal->price }}</h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+        <!-- Sk Sllicider Wrapper -->
+        <div class="deal-slider">
+            @foreach ($deals as $deal)
+                <div class="px-2"> <!-- px-2 for spacing between slides -->
+                    <div class="single_menu border rounded p-3 shadow-sm bg-white">
+                        <div class="single_menu_img text-center mb-3">
+                            <img src="{{ asset($deal->image) }}" alt="deal" class="img-fluid" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;">
+                        </div>
+                        <div class="single_menu_text text-center">
+                            <a class="category text-muted d-block mb-1" href="#">{{ $deal->category->name ?? 'No Category' }}</a>
+                            <a class="title d-block fw-bold fs-5 mb-2" href="#">{{ $deal->title }}</a>
+                            <p class="descrption small text-secondary mb-3">{{ $deal->description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a
+                                    class="add_to_cart btn btn-sm btn-success text-white"
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#dealModal"
+                                    data-products="{{ $deal->product }}">
+                                    View
+                                </a>
+                                <h5 class="mb-0 text-primary"> PKR: {{ $deal->price }}</h5>
+                            </div>
                         </div>
                     </div>
-                    <!-- Deals End -->
-
                 </div>
+            @endforeach
+        </div>
+        <!-- End Slick Wrapper -->
+    </div>
+    <!-- Deals End -->
+</div>
+
             </div>
         </div>
     </section>
 
+<!-- Button to trigger the modal -->
 
-    <section class="pt-100 pb-100 bg-light text-center">
-        <div class="container">
-            <h2 class="mb-4">About Horizon Solar</h2>
-            <p class="mb-5">Empowering homes and businesses with sustainable, high-performance solar energy solutions.
+<!-- Modal Structure -->
+<div class="modal fade" id="dealModal" tabindex="-1" aria-labelledby="dealModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dealModalLabel">Book Your Deal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+      <!-- Modal Body -->
+<div class="modal-body">
+    <h6><strong>Products:</strong></h6>
+    <ul id="productList" class="mb-3"></ul> <!-- Product names will be inserted here -->
+</div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <section class="pt-100 pb-100 bg-light text-center" style="margin-top:50px !important">
+        <div class="container"> <br>
+            <h1 class="mt-5" style="margin-top: 30px !important">About Horizon Solar</h1>
+            <p class="mt-4">Empowering homes and businesses with sustainable, high-performance solar energy solutions.
                 Save costs, protect the planet, and brighten the future with Horizon Solar.</p>
-            <div class="row">
+            <div class="row mt-5">
                 <div class="col-md-4 mb-4">
                     <div class="p-4 bg-white shadow rounded h-100">
                         <div class="mb-3">
@@ -261,8 +291,8 @@
             </div>
         </div>
     </section>
-    <footer class="pt-100 mt-120 text-white bg-dark">
-        <div class="container">
+    <footer class="pt-100 mt-120 text-white bg-dark " style="margin-top:50px !important">
+        <div class="container mt-5">
             <div class="row gy-4">
                 <!-- Logo and Intro -->
                 <div class="col-lg-4 col-md-6">
@@ -274,7 +304,7 @@
                 </div>
 
                 <!-- Contact Info -->
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6 mt-5">
                     <h4 class="mb-3 text-light">Contact Us</h4>
                     <ul class="list-unstyled">
                         <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Plot 45, I-9 Industrial Area,
@@ -285,7 +315,7 @@
                 </div>
 
                 <!-- Social Media -->
-                <div class="col-lg-4 col-md-12">
+                <div class="col-lg-4 col-md-12 mt-5">
                     <h4 class="mb-3 text-light">Follow Us</h4>
                     <div class="d-flex">
                         <a class="text-white me-3 fs-4" href="#"><i class="fab fa-facebook-f"></i></a>
@@ -300,7 +330,7 @@
 
             <div class="row">
                 <div class="col-12 text-center">
-                    <p class="mb-0">&copy; 2025 Horizon Solar. All rights reserved. Designed & developed by ProWave
+                    <p class="mb-3">&copy; 2025 Horizon Solar. All rights reserved. Designed & developed by ProWave
                         Software Solutions.</p>
                 </div>
             </div>
@@ -503,6 +533,64 @@
     <!--script/custom js-->
     <script src="order_page/assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    $(document).ready(function(){
+        $('.deal-slider').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            dots: false,       // pagination dots removed
+            arrows: false,     // navigation arrows removed
+            responsive: [
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dealModal = document.getElementById('dealModal');
+
+        dealModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const products = button.getAttribute('data-products');
+            const productList = dealModal.querySelector('#productList');
+
+            // Clear existing product list items
+            productList.innerHTML = '';
+
+            // If products are present
+            if (products) {
+                // Check if it's JSON (like '["Fan", "AC"]') or comma separated (like 'Fan,AC')
+                let productArray = [];
+                try {
+                    productArray = JSON.parse(products);
+                } catch (e) {
+                    productArray = products.split(',');
+                }
+
+                productArray.forEach(product => {
+                    const li = document.createElement('li');
+                    li.textContent = product.trim();
+                    productList.appendChild(li);
+                });
+            }
+        });
+    });
+</script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
