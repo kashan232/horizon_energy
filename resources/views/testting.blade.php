@@ -191,7 +191,7 @@
     <div class="mt-5">
         <h2 class="mb-4">All Deals / Packages</h2>
 
-        <!-- Slick Slider Wrapper -->
+        <!-- Sk Sllicider Wrapper -->
         <div class="deal-slider">
             @foreach ($deals as $deal)
                 <div class="px-2"> <!-- px-2 for spacing between slides -->
@@ -212,7 +212,7 @@
                                     data-products="{{ $deal->product }}">
                                     View
                                 </a>
-                                <h5 class="mb-0 text-primary">PKR: {{ $deal->price }}</h5>
+                                <h5 class="mb-0 text-primary"> PKR: {{ $deal->price }}</h5>
                             </div>
                         </div>
                     </div>
