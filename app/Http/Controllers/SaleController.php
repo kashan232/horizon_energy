@@ -153,7 +153,7 @@ class SaleController extends Controller
     public function view($id)
     {
         // Fetch the purchase record
-        $purchase = \App\Models\Purchase::findOrFail($id);
+        $purchase = \App\Models\Sale::findOrFail($id);
 
         // Decode JSON fields safely (to array)
         $purchase->item_category = is_array($purchase->item_category) ? $purchase->item_category : json_decode($purchase->item_category, true);
@@ -168,11 +168,13 @@ class SaleController extends Controller
 
         $categories = \App\Models\Category::whereIn('id', $categoryIds)->pluck('category', 'id'); // replace 'category_name' with your actual column
         $products = \App\Models\Product::whereIn('id', $productIds)->pluck('name', 'id');     // replace 'product_name' with your actual column
+        $Customer = \App\Models\Customer::all();    // replace 'product_name' with your actual column
 
         return view('admin_panel.sale.view', [
             'purchase' => $purchase,
             'categories' => $categories,
             'products' => $products,
+            'customer' => $Customer,
         ]);
     }
 

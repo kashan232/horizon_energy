@@ -17,20 +17,48 @@ use Illuminate\Support\Facades\Session;
 class HomeController extends Controller
 {
 
-    public function welcome(Request $request)
+  // HomeController.php (welcome method)
+public function welcome()
 {
-    $products = Product::all();
+    // سارے پروڈکٹس ایک بار لے لیں (id, name, category)
+    $products = Product::with('category:id,category')  // eager‑load category
+                       ->get(['id','name','category_id']);
 
-    $all_categories = Category::get()
-        ->map(function ($category) {
-            $category->products_count = $category->products()->count();
-            return $category;
-        });
+    // keyed collection:  ["Fan" => Product,  "AC" => Product, ...]
+    $productIndex = $products->keyBy(fn($p) => strtolower($p->name));
 
-    $deals = Deal::where('status', true)->get(); // Sare deals bhi le ayenge
+    // deals لے آئیں
+    $deals = Deal::where('status', true)->get();
+
+    // ہر deal پر category نکالیں
+    $deals->transform(function ($deal) use ($productIndex) {
+
+        // product names string  → array
+        $names = collect(explode(',', $deal->product))
+                    ->map(fn($n) => trim(strtolower($n)))
+                    ->filter();
+
+        // پہلی valid product ڈھونڈیں
+        foreach ($names as $name) {
+            if ($productIndex->has($name)) {
+                $deal->derived_category = $productIndex[$name]->category->category;   // eg "Electronics"
+                return $deal;
+            }
+        }
+
+        // کچھ نہ ملا
+        $deal->derived_category = 'No Category';
+        return $deal;
+    });
+
+    // categories sidebar
+    $all_categories = Category::withCount('products')
+                     ->with('products:id,name,category_id')
+                     ->get();
 
     return view('welcome', compact('products', 'all_categories', 'deals'));
 }
+
 
     public function home()
     {

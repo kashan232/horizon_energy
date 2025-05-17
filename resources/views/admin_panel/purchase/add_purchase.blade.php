@@ -68,6 +68,7 @@
                                                     <option selected disabled>Select One</option>
                                                     @foreach($Suppliers as $Cus)
                                                         <option value="{{$Cus->name }}">{{ $Cus->name }}</option>
+
                                                     @endforeach
                                                 </select>
                                             </div>

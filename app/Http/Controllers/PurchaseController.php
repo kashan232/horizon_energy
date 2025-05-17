@@ -76,14 +76,16 @@ class PurchaseController extends Controller
         $categories = \App\Models\Category::whereIn('id', $categoryIds)->pluck('category', 'id'); // replace 'category_name' with your actual column
 
 
-       
+
 
         $products = \App\Models\Product::whereIn('id', $productIds)->pluck('name', 'id');     // replace 'product_name' with your actual column
+        $Suppliers = \App\Models\Supplier::all();     // replace 'product_name' with your actual column
 //  dd($categories);
         return view('admin_panel.purchase.view', [
             'purchase' => $purchase,
             'categories' => $categories,
             'products' => $products,
+            'suppliers' => $Suppliers,
         ]);
     }
 
@@ -133,6 +135,8 @@ class PurchaseController extends Controller
             'Payable_amount' => $totalPrice - $discount, // Correct subtraction with numeric values
             'paid_amount' => $request->paid_amount,
             'due_amount' => $request->due_amount,
+            'smobile' => $request->mobile,
+            'saddress' => $request->address,
 
         ];
         // Save purchase data

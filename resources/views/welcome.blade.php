@@ -136,7 +136,7 @@
                                         <a class="category" href="#">{{ $product->category->category }}</a>
                                         <a class="title" href="#">
                                             {{ $product->name }} <span
-                                                class="unit">({{ $product->unit->unit }})</span>
+                                                class="unit"></span>
                                             <br> <span class="text-warning">{{ $product->subcategory->name ?? '' }}
                                             </span>
                                         </a>
@@ -200,7 +200,7 @@
                             <img src="{{ asset($deal->image) }}" alt="deal" class="img-fluid" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;">
                         </div>
                         <div class="single_menu_text text-center">
-                            <a class="category text-muted d-block mb-1" href="#">{{ $deal->category->name ?? 'No Category' }}</a>
+                            <a class="category text-muted d-block mb-1" href="#">{{ $deal->derived_category }}</a>
                             <a class="title d-block fw-bold fs-5 mb-2" href="#">{{ $deal->title }}</a>
                             <p class="descrption small text-secondary mb-3">{{ $deal->description }}</p>
                             <div class="d-flex justify-content-between align-items-center">
