@@ -112,8 +112,7 @@
                                                   <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <label>Unit(UoM)</label>
-                                                        <select name="unit" class="select2-basic form-control" required>
-                                                            <option value="" selected disabled>Select One</option>
+                                                        <select name="unit" class=" form-control" required>
                                                             @foreach($all_unit as $unit)
                                                             <option value="{{ $unit->id }}">
                                                                 {{ $unit->unit }}

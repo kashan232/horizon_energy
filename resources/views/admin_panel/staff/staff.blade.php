@@ -106,38 +106,38 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label>Name</label>
-                                        <input type="text" class="form-control" name="name" required>
+                                        <input type="text" class="form-control" name="name" >
                                     </div>
                 
                                     <div class="form-group">
                                         <label>Phone</label>
-                                        <input type="text" class="form-control" name="phone" required>
+                                        <input type="text" class="form-control" name="phone" >
                                     </div>
                 
                                     <div class="form-group">
                                         <label>Email</label>
-                                        <input type="email" class="form-control" name="email" required>
+                                        <input type="email" class="form-control" name="email" >
                                     </div>
                 
                                     <div class="form-group">
                                         <label>Role</label>
-                                        <input type="text" class="form-control" name="usertype" required>
+                                        <input type="text" class="form-control" name="usertype" >
                                     </div>
                 
                                     <div class="form-group">
                                         <label>Salary</label>
-                                        <input type="number" class="form-control" name="salary" required>
+                                        <input type="number" class="form-control" name="salary" >
                                     </div>
                 
                                     {{-- You can make total_due optional --}}
                                     <div class="form-group">
                                         <label>Total Due</label>
-                                        <input type="number" class="form-control" name="total_due" value="0" required>
+                                        <input type="number" class="form-control" name="total_due" value="0" >
                                     </div>
                 
                                     <div class="form-group">
                                         <label>Last Payment Date</label>
-                                        <input type="date" class="form-control" name="last_payment_date" required>
+                                        <input type="date" class="form-control" name="last_payment_date" >
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -164,7 +164,7 @@
                                     <div class="form-group">
                                         <label>Name</label>
                                         <input type="hidden" name="staff_id" id="staff_id">
-                                        <input type="text" class="form-control" name="name" id="staff_name" required>
+                                        <input type="text" class="form-control" name="name" id="staff_name" >
                                     </div>
                 
                                     <div class="form-group">

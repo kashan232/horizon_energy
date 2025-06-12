@@ -122,7 +122,7 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label>Name</label>
-                                    {{-- <input type="text" id="editCategoryId" name="category_id" class="form-control" required> --}}
+                                  <input type="hidden" id="editCategoryId" name="category_id" class="form-control" required>
                                     <input type="text" id="editCategoryName" name="category_name" class="form-control">
                                 </div>
                             </div>

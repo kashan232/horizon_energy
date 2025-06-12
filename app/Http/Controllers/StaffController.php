@@ -31,15 +31,15 @@ public function store_staff(Request $request)
     if (Auth::id()) {
         $userId = Auth::id();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'usertype' => 'required|string|max:255',
-            'salary' => 'required|numeric',
-            'total_due' => 'required|numeric',
-            'last_payment_date' => 'required|date',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'phone' => 'required|string|max:20',
+        //     'email' => 'required|email|max:255',
+        //     'usertype' => 'required|string|max:255',
+        //     'salary' => 'required|numeric',
+        //     'total_due' => 'required|numeric',
+        //     'last_payment_date' => 'required|date',
+        // ]);
 
         Staff::create([
             'admin_id'          => $userId,
@@ -66,13 +66,13 @@ public function store_staff(Request $request)
             return redirect()->back();
         }
     
-        $request->validate([
-            'staff_id' => 'required|exists:staff,id',
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'usertype' => 'required|string|max:255',
-        ]);
+        // $request->validate([
+        //     'staff_id' => 'required|exists:staff,id',
+        //     'name' => 'required|string|max:255',
+        //     'email' => 'required|email|max:255',
+        //     'phone' => 'nullable|string|max:20',
+        //     'usertype' => 'required|string|max:255',
+        // ]);
     
         Staff::where('id', $request->staff_id)->update([
             'name'       => $request->name,

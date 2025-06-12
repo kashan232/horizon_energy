@@ -118,7 +118,7 @@
         <div class="invoice-header">
             <div>
                 {{-- <img src="logo_url_here" alt="Company Logo"> --}}
-                <img src="{{ asset('assets/admin/images/BB_logo.png') }}" alt="Company Logo">>
+                <img src="{{ asset('assets/admin/images/logo.png') }}" alt="Company Logo">>
             </div>
             <div class="invoice-details">
                 <h1>Invoice</h1>

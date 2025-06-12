@@ -63,7 +63,7 @@
                                                 {{-- <td><strong>{{ $Customer->closing_balance ?? '0' }}</strong></td> <!-- Display the closing balance --> --}}
                                                 <td>
                                                     <div class="button--group">
-                                                        <button type="button" class="btn btn-sm btn-outline--primary editcustomerbtn" data-toggle="modal" data-target="#exampleModal" data-customer-id="{{ $Customer->id }}" data-customer-name="{{ $Customer->customer_name }}" data-customer-email="{{ $Customer->customer_email }}" data-customer-phone="{{ $Customer->customer_phone }}"
+                                                        <button type="button" class="btn btn-sm btn-outline--primary editcustomerbtn" data-toggle="modal" data-target="#exampleModal" data-customer-id="{{ $Customer->id }}" data-customer-name="{{ $Customer->name }}" data-customer-email="{{ $Customer->email }}" data-customer-phone="{{ $Customer->phone }}"
                                                             data-customer-address="{{ $Customer->address }}">
                                                             <i class="la la-pencil"></i>Edit </button>
 

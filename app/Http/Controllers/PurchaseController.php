@@ -135,8 +135,8 @@ class PurchaseController extends Controller
             'Payable_amount' => $totalPrice - $discount, // Correct subtraction with numeric values
             'paid_amount' => $request->paid_amount,
             'due_amount' => $request->due_amount,
-            'smobile' => $request->mobile,
-            'saddress' => $request->address,
+            // 'smobile' => $request->mobile,
+            // 'saddress' => $request->address,
 
         ];
         // Save purchase data

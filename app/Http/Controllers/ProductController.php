@@ -34,7 +34,7 @@ class ProductController extends Controller
             $all_category = Category::where('admin_or_user_id', '=', $userId)->get();
             $all_brand = Brand::where('admin_or_user_id', '=', $userId)->get();
             $all_unit = Unit::where('admin_or_user_id', '=', $userId)->get();
-
+// dd( $all_unit);
             return view('admin_panel.product.add_product', [
                 'all_category' => $all_category,
                 'all_brand' => $all_brand,

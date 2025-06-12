@@ -118,11 +118,13 @@
     <div class="receipt-container">
         <!-- Receipt Header -->
         <div class="receipt-header">
-            <img src="../assets/admin/images/BB_logo.png" alt="Company Logo">
-            <h2>Beauty Base Cosmetics</h2>
+            <img src="../assets/admin/images/logo.png" alt="Company Logo">
+            <h2>Horizon Green Enregy</h2>
             <p><strong>Cash Memo</strong></p>
-            <p><strong>Address:</strong> Resham Bazar</p>
-            <p><strong>Phone:</strong> 0313-300452-0</p>
+            <p><strong>Address:</strong>      Horizon Green Enregy
+                                        Head Office: Hyderabad
+                                        Autobahn Hyderabad</p>
+            <p><strong>Phone:</strong>  123-456-7890</p>
         </div>
 
         <!-- Sale Details -->
